@@ -1,0 +1,138 @@
+h1 {
+  font-size: 4.5em;
+  display: flex;
+  justify-content: center;
+}
+
+video {
+  width: 1280px;
+  height: 720px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.button {
+  padding: 15px 25px;
+  font-size: 24px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4caf50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.videoChoose {
+  margin-right: 50px;
+}
+
+.button:hover {
+  background-color: #3e8e41;
+}
+
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+div {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.videoChange {
+  flex-shrink: 0;
+  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+  width: 290px;
+  height: 270px;
+  background-color: whitesmoke;
+  border-radius: 6px;
+  margin-right: 50px;
+}
+
+.videoTitle {
+  width: 100%;
+  flex: 1;
+}
+
+span {
+  text-align: center;
+  height: 56px;
+  width: 56px;
+  line-height: 56px;
+  background-color: white;
+  padding: 3px;
+  border-radius: 10px;
+  border: 1px solid white;
+  font-size: 1.5em;
+}
+
+span:hover {
+  cursor: pointer;
+  background-color: #dff6fd;
+  color: #00aeec;
+  border-color: #00aeec;
+}
+
+span:active {
+  background-color: #00adeb;
+  color: white;
+}
+
+.changeOption {
+  flex: auto;
+  flex-wrap: wrap;
+}
+
+div .color {
+  background-color: #00adeb;
+  color: white;
+  border: 1px solid #00aeec;
+}
+
+.speed {
+  flex-direction: column;
+  background-color: whitesmoke;
+  border-radius: 6px;
+  width: 290px;
+  height: 100px;
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.speedTittle {
+  width: 100%;
+  flex: 1;
+  line-height: 50px;
+  font-size: 1.5em;
+}
+
+.speedNumber {
+  width: 100%;
+  flex: 1;
+}
+
+.speedInput {
+  height: 24px;
+}
+
+.speedButton {
+  width: 50px;
+  height: 30px;
+}
+
+.right {
+  flex-direction: column;
+}
+
+input {
+  width: 150px;
+}
