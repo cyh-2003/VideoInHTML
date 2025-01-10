@@ -92,14 +92,14 @@ function song_list_dom(id, bool) {
     Array.from(document.getElementById('player__main').querySelectorAll('div')).forEach((div) => {
         div.style.opacity = .6
     })
-    Array.from(document.getElementById('player__main').querySelectorAll('div')).slice(-2 + 6 * id, 4 + id * 6).forEach((div) => {
-        div.style.opacity = 1
-    })
+    for (let i = 1; i < songs_length + 1; i++) {
+        document.getElementById(i).innerHTML = i
+    }
     if (bool) {
-        for (let i = 1; i < songs_length + 1; i++) {
-            document.getElementById(i).innerHTML = i
-        }
         document.getElementById(id).innerHTML = '<img src="./images/wave.gif">'
+        Array.from(document.getElementById('player__main').querySelectorAll('div')).slice(-2 + 6 * id, 4 + id * 6).forEach((div) => {
+            div.style.opacity = 1
+        })
     }
 }
 
