@@ -15,6 +15,7 @@ function formatTime(seconds) {
 btn_play.addEventListener("click", () => {
     play()
 })
+//处理播放是否暂停/继续
 function play() {
     music.pause()
     if (btn_play.className == "") {
@@ -31,10 +32,11 @@ function play() {
         song_list_dom(id, false)
     }
 }
-
+//绑定下一首事件
 btn_next.addEventListener("click", () => {
     next_song()
 })
+//绑定上一首事件
 btn_prev.addEventListener("click", () => {
     prev_song()
 })
@@ -43,18 +45,18 @@ const update = () => {
     player_progress(event, (music.currentTime / music_time) * player_progress_inner.clientWidth)
     requestID = requestAnimationFrame(update)
 }
-
+//歌曲进度条dom
 function player_progress(event, width) {
     player_progress_dot.style.left = width + 'px'
     player_progress_played.style.width = width + "px"
     player_music_time.innerText = formatTime(music.currentTime) + " / " + formatTime(music_time)
 }
-
+//歌曲进度条点击
 player_progress_click.addEventListener("click", (event) => {
     music.currentTime = (event.offsetX / player_progress_inner.clientWidth) * music_time
     player_progress(event, event.offsetX)
 })
-
+//音量图标点击逻辑
 voice_logo.addEventListener("click", () => {
     if (voice_logo.className == "") {
         voice_logo.className = "no_vocie"
@@ -65,13 +67,13 @@ voice_logo.addEventListener("click", () => {
         voice_logo_Fn(.6, voice_volume_restart, voice_volume_restart)
     }
 })
-
+//音量条dom
 function voice_logo_Fn(volume, left, width) {
     music.volume = volume
     voice_dot.style.left = left + "px"
     voice_overed.style.width = width + "px"
 }
-
+//更改播放模式,循环播放,重复播放，随机播放
 let state = 1
 btn_loop.addEventListener("click", () => {
     switch (state) {
@@ -89,7 +91,7 @@ btn_loop.addEventListener("click", () => {
             break
     }
 })
-
+//歌曲列表变化dom操作
 function song_list_dom(id, bool) {
     Array.from(document.getElementById('player__main').querySelectorAll('div')).forEach((div) => {
         div.style.opacity = .6
@@ -104,7 +106,7 @@ function song_list_dom(id, bool) {
         })
     }
 }
-
+//歌曲切换逻辑
 function change(num) {
     id = num
     song_list_dom(id, true)
@@ -119,7 +121,7 @@ function change(num) {
     song_name.innerText = "歌曲名：" + path[num]["name"]
     songer.innerText = "歌手：" + path[num]["songer"]
 }
-
+//确保获得音乐的时长
 music.addEventListener('loadedmetadata', () => {
     music_time = Math.floor(music.duration)
 })
@@ -130,7 +132,7 @@ voice_click.addEventListener("click", (event) => {
     music.volume = event.offsetX / voice_inner.clientWidth
     if (music.volume > 0) voice_logo.classList.remove("no_vocie")
 })
-
+//实现快捷键
 document.addEventListener('keydown', (event) => {
     let music_volume = Math.floor(music.volume * 100)
     switch (event.key) {
@@ -174,16 +176,19 @@ document.addEventListener('keydown', (event) => {
 
     }
 })
+//上一首歌
 function prev_song() {
     id--
     id == 0 ? id = songs_length : undefined
     change(id)
 }
+//下一首歌
 function next_song() {
     id++
     id < songs_length + 1 ? undefined : id = 1
     change(id)
 }
+//音乐结束的操作
 music.onended = () => {
     switch (state) {
         case 1:
