@@ -61,9 +61,11 @@ voice_logo.addEventListener("click", () => {
         voice_logo_Fn(0, 0, 0)
     } else {
         voice_logo.classList.remove("no_vocie")
-        voice_logo_Fn(.6, 60 * (voice_inner.clientWidth / 100), 50)
+        let voice_volume_restart = 60 * (voice_inner.clientWidth / 100)
+        voice_logo_Fn(.6, voice_volume_restart, voice_volume_restart)
     }
 })
+
 function voice_logo_Fn(volume, left, width) {
     music.volume = volume
     voice_dot.style.left = left + "px"
@@ -92,14 +94,14 @@ function song_list_dom(id, bool) {
     Array.from(document.getElementById('player__main').querySelectorAll('div')).forEach((div) => {
         div.style.opacity = .6
     })
-    Array.from(document.getElementById('player__main').querySelectorAll('div')).slice(-2 + 6 * id, 4 + id * 6).forEach((div) => {
-        div.style.opacity = 1
-    })
+    for (let i = 1; i < songs_length + 1; i++) {
+        document.getElementById(i).innerHTML = i
+    }
     if (bool) {
-        for (let i = 1; i < songs_length + 1; i++) {
-            document.getElementById(i).innerHTML = i
-        }
         document.getElementById(id).innerHTML = '<img src="./images/wave.gif">'
+        Array.from(document.getElementById('player__main').querySelectorAll('div')).slice(-2 + 6 * id, 4 + id * 6).forEach((div) => {
+            div.style.opacity = 1
+        })
     }
 }
 
@@ -121,21 +123,26 @@ function change(num) {
 music.addEventListener('loadedmetadata', () => {
     music_time = Math.floor(music.duration)
 })
+
 voice_click.addEventListener("click", (event) => {
     voice_overed.style.width = event.offsetX + "px"
     voice_dot.style.left = event.offsetX + "px"
     music.volume = event.offsetX / voice_inner.clientWidth
+    if (music.volume > 0) voice_logo.classList.remove("no_vocie")
 })
 
 document.addEventListener('keydown', (event) => {
+    let music_volume = Math.floor(music.volume * 100)
     switch (event.key) {
         case " ":
             play()
             break
+        case "ArrowLeft":
         case "a":
         case "A":
             music.currentTime -= 3
             break
+        case "ArrowRight":
         case "d":
         case "D":
             music.currentTime += 3
@@ -148,15 +155,23 @@ document.addEventListener('keydown', (event) => {
         case "E":
             next_song()
             break
-        //case "w":
-        //case "W":
-        //    music.volume > 0.99 ? undefined : music.volume += 0.1, voice_logo.classList.remove("no_vocie")
-        //    break
-        //case "s":
-        //case "S":
-        //    music.volume < 0.1 ? undefined : music.volume -= 0.1
-        //    music.volume < 0.1 ? voice_logo.classList.add("no_vocie") : undefined
-        //    break
+        case "ArrowUp":
+        case "w":
+        case "W":
+            let music_volume_up = Math.ceil(music_volume / 10) * 10 + 10
+            let width_left = Math.floor(music_volume_up * (voice_inner.clientWidth / 100))
+            music_volume_up > 100 ? undefined : voice_logo_Fn(music_volume_up * .01, width_left, width_left)
+            music_volume_up > 100 ? undefined : voice_logo.classList.remove("no_vocie")
+            break
+        case "ArrowDown":
+        case "s":
+        case "S":
+            let music_volume_down = Math.ceil(music_volume / 10) * 10 - 10
+            let width_right = Math.floor(music_volume_down * (voice_inner.clientWidth / 100))
+            music_volume_down >= 0 ? voice_logo_Fn(music_volume_down * .01, width_right, width_right) : undefined
+            music.volume == 0 ? voice_logo.className = "no_vocie" : undefined
+            break
+
     }
 })
 function prev_song() {
