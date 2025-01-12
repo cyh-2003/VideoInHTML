@@ -108,8 +108,7 @@ function song_list_dom(id, bool) {
 }
 //歌曲切换逻辑
 function change(num) {
-    id = num
-    song_list_dom(id, true)
+    song_list_dom(num, true)
     music.pause()
     music.src = "./music/" + path[num]["path"]
     player_music_info.innerText = path[num]["name"]
@@ -125,7 +124,7 @@ function change(num) {
 music.addEventListener('loadedmetadata', () => {
     music_time = Math.floor(music.duration)
 })
-
+//音乐进度条dom操作
 voice_click.addEventListener("click", (event) => {
     voice_overed.style.width = event.offsetX + "px"
     voice_dot.style.left = event.offsetX + "px"
@@ -173,7 +172,6 @@ document.addEventListener('keydown', (event) => {
             music_volume_down >= 0 ? voice_logo_Fn(music_volume_down * .01, width_right, width_right) : undefined
             music.volume == 0 ? voice_logo.className = "no_vocie" : undefined
             break
-
     }
 })
 //上一首歌

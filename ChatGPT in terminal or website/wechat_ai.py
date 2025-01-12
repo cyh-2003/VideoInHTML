@@ -1,3 +1,4 @@
+#https://github.com/cluic/wxauto
 import time
 from wxauto import WeChat
 from openai import OpenAI
