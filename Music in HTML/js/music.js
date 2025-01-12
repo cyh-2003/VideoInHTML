@@ -108,6 +108,7 @@ function song_list_dom(id, bool) {
 }
 //歌曲切换逻辑
 function change(num) {
+    id = num
     song_list_dom(num, true)
     music.pause()
     music.src = "./music/" + path[num]["path"]
