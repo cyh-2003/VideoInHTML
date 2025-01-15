@@ -76,6 +76,7 @@ body {
   height: 3px;
 }
 #player_progress_dot {
+  z-index: 1;
   position: absolute;
   width: 10px;
   height: 10px;
@@ -137,6 +138,7 @@ body {
   background-color: white;
 }
 #voice_dot {
+  z-index: 1;
   position: absolute;
   background-color: white;
   border-radius: 50%;
