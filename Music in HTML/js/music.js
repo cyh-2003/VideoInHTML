@@ -217,12 +217,14 @@ player_progress_dot.onmousedown = (event) => {
         if (0 < newX && newX < player_progress_inner.offsetWidth) {
             player_progress_dot.style.left = newX + "px"
             player_progress_played.style.width = newX + "px"
+            music.muted = true
             music.currentTime = (newX / player_progress_inner.clientWidth) * music_time
         }
     }
 
     document.onmouseup = () => {
         document.onmousemove = null
+        music.muted = false
         update()
     }
 }
