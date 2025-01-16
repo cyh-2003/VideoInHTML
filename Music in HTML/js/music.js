@@ -207,42 +207,39 @@ music.onended = () => {
     }
 }
 //实现移动按钮改变音乐播放位置
+let newX
 player_progress_dot.onmousedown = (event) => {
-    cancelAnimationFrame(requestID)
-    let initX = event.clientX
-    let startX = player_progress_played.offsetWidth
-    document.onmousemove = (event) => {
-        let moveX = event.clientX
-        let newX = moveX - initX + startX
-        if (0 < newX && newX < player_progress_inner.offsetWidth) {
-            player_progress_dot.style.left = newX + "px"
-            player_progress_played.style.width = newX + "px"
-            music.muted = true
-            music.currentTime = (newX / player_progress_inner.clientWidth) * music_time
-        }
-    }
-
-    document.onmouseup = () => {
-        document.onmousemove = null
-        music.muted = false
-        update()
-    }
+    dot_move(event, player_progress_dot, player_progress_inner, player_progress_played, true)
 }
-//实现移动按钮改变音量
+
 voice_dot.onmousedown = (event) => {
+    dot_move(event, voice_dot, voice_inner, voice_overed, false)
+}
+
+function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放进度条,false调整音量
     let initX = event.clientX
-    let startX = voice_overed.offsetWidth
+    let startX = overed.offsetWidth
     document.onmousemove = (event) => {
         let moveX = event.clientX
         let newX = moveX - initX + startX
-        if (0 < newX && newX < voice_inner.offsetWidth) {
-            voice_dot.style.left = newX + "px"
-            voice_overed.style.width = newX + "px"
-            music.volume = newX / voice_inner.clientWidth
+        if (0 < newX && newX < inner.offsetWidth) {
+            dot.style.left = newX + "px"
+            overed.style.width = newX + "px"
+            if (bool) {
+                music.muted = true
+                music.currentTime = (newX / inner.clientWidth) * music_time
+            } else {
+                music.volume = newX / inner.clientWidth
+            }
+
         }
     }
 
     document.onmouseup = () => {
         document.onmousemove = null
+        if (bool) {
+            music.muted = false
+            update()
+        }
     }
 }
