@@ -222,7 +222,7 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
     document.onmousemove = (event) => {
         let moveX = event.clientX
         let newX = moveX - initX + startX
-        if (0 < newX && newX < inner.offsetWidth) {
+        if (0 <= newX && newX <= inner.offsetWidth) {
             dot.style.left = newX + "px"
             overed.style.width = newX + "px"
             if (bool) {
