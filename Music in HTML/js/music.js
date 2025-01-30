@@ -1,10 +1,9 @@
 const music = document.querySelector("audio")
+const songs_length = document.getElementsByClassName("id").length
 let requestID
 let music_time
-let songs_length = document.getElementsByClassName("id").length
-music.volume = .6
-music_time = Math.floor(music.duration)
 let id = 1
+music.volume = .6
 //格式化时间
 function formatTime(seconds) {
     let min = Math.floor(seconds / 60)

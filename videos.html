@@ -48,6 +48,8 @@
         const video = document.querySelector("video")
         const input = document.querySelector("input")
         const spanNum = document.querySelectorAll("span").length
+        localStorage.choose ? undefined : localStorage.choose = 1
+        localStorage.time ? undefined : localStorage.time = 0
         let left = ""
         let right = ""
         let path = {
