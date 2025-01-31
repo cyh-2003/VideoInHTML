@@ -18,7 +18,7 @@ btn_play.addEventListener("click", () => {
 function play() {
     music.pause()
     if (btn_play.className == "") {
-        music.src == "" ? change(id) : undefined
+        if (music.src == "") change(id)
         music.play()
         update()
         song_list_dom(id, true)
@@ -108,6 +108,7 @@ function song_list_dom(id, bool) {
 //歌曲切换逻辑
 function change(num) {
     id = num
+    if ('mediaSession' in navigator) mediaSession()
     song_list_dom(num, true)
     music.pause()
     music.src = "./music/" + path[num]["path"]
@@ -115,8 +116,8 @@ function change(num) {
     music.play()
     btn_play.className = "pause"
     update()
-    song_img.style.backgroundImage = "url(./images/album/" + path[num]["album"] + ")"
-    document.body.style.backgroundImage = "url(./images/album/" + path[num]["album"] + ")"
+    song_img.style.backgroundImage = "url(images/album/" + path[num]["album"] + ")"
+    document.body.style.backgroundImage = "url(images/album/" + path[num]["album"] + ")"
     song_name.innerText = "歌曲名：" + path[num]["name"]
     songer.innerText = "歌手：" + path[num]["songer"]
 }
@@ -169,8 +170,8 @@ document.addEventListener('keydown', (event) => {
         case "S":
             let music_volume_down = Math.ceil(music_volume / 10) * 10 - 10
             let width_right = Math.floor(music_volume_down * (voice_inner.clientWidth / 100))
-            music_volume_down >= 0 ? voice_logo_Fn(music_volume_down * .01, width_right, width_right) : undefined
-            music.volume == 0 ? voice_logo.className = "no_vocie" : undefined
+            if (music_volume_down >= 0) voice_logo_Fn(music_volume_down * .01, width_right, width_right)
+            if (music.volume == 0) voice_logo.className = "no_vocie"
             break
     }
 })
@@ -233,7 +234,6 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
 
         }
     }
-
     document.onmouseup = () => {
         document.onmousemove = null
         if (bool) {
@@ -241,4 +241,23 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
             update()
         }
     }
+}
+
+if ('mediaSession' in navigator) {
+    mediaSession()
+    navigator.mediaSession.setActionHandler('play', () => { play() })
+    navigator.mediaSession.setActionHandler('pause', () => { play() })
+    navigator.mediaSession.setActionHandler('seekbackward', () => { music.currentTime -= 3 })
+    navigator.mediaSession.setActionHandler('seekforward', () => { music.currentTime += 3 })
+    navigator.mediaSession.setActionHandler('previoustrack', () => { prev_song() })
+    navigator.mediaSession.setActionHandler('nexttrack', () => { next_song() })
+}
+function mediaSession() {
+    navigator.mediaSession.metadata = new MediaMetadata({
+        title: path[id]["name"],
+        artist: path[id]["songer"],
+        artwork: [
+            { src: "images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },
+        ]
+    })
 }
