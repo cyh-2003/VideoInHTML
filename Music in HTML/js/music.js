@@ -108,7 +108,15 @@ function song_list_dom(id, bool) {
 //歌曲切换逻辑
 function change(num) {
     id = num
-    if ('mediaSession' in navigator) mediaSession()
+    if ('mediaSession' in navigator) {
+        navigator.mediaSession.metadata = new MediaMetadata({
+            title: path[id]["name"],
+            artist: path[id]["songer"],
+            artwork: [
+                { src: "images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },
+            ]
+        })
+    }
     song_list_dom(num, true)
     music.pause()
     music.src = "./music/" + path[num]["path"]
@@ -242,22 +250,12 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
         }
     }
 }
-
+//支持Media Session API
 if ('mediaSession' in navigator) {
-    mediaSession()
     navigator.mediaSession.setActionHandler('play', () => { play() })
     navigator.mediaSession.setActionHandler('pause', () => { play() })
     navigator.mediaSession.setActionHandler('seekbackward', () => { music.currentTime -= 3 })
     navigator.mediaSession.setActionHandler('seekforward', () => { music.currentTime += 3 })
     navigator.mediaSession.setActionHandler('previoustrack', () => { prev_song() })
     navigator.mediaSession.setActionHandler('nexttrack', () => { next_song() })
-}
-function mediaSession() {
-    navigator.mediaSession.metadata = new MediaMetadata({
-        title: path[id]["name"],
-        artist: path[id]["songer"],
-        artwork: [
-            { src: "images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },
-        ]
-    })
 }
