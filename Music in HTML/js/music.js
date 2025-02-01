@@ -109,13 +109,9 @@ function song_list_dom(id, bool) {
 function change(num) {
     id = num
     if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata = new MediaMetadata({
-            title: path[id]["name"],
-            artist: path[id]["songer"],
-            artwork: [
-                { src: "images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },
-            ]
-        })
+        navigator.mediaSession.metadata.title = path[id]["name"]
+        navigator.mediaSession.metadata.artist = path[id]["songer"]
+        navigator.mediaSession.metadata.artwork = [{ src: "images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },]
     }
     song_list_dom(num, true)
     music.pause()
@@ -252,6 +248,7 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
 }
 //支持Media Session API
 if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({})
     navigator.mediaSession.setActionHandler('play', () => { play() })
     navigator.mediaSession.setActionHandler('pause', () => { play() })
     navigator.mediaSession.setActionHandler('seekbackward', () => { music.currentTime -= 3 })
