@@ -176,6 +176,8 @@ body {
   opacity: 1;
   cursor: pointer;
 }
+#player_progress_dot:hover,
+#voice_dot:hover,
 #player_progress_click:hover,
 #voice_click:hover {
   cursor: pointer;
@@ -222,6 +224,7 @@ body {
   display: none;
 }
 #song_info {
+  color: white;
   width: 340px;
   margin: 0 auto;
   position: relative;
@@ -253,21 +256,19 @@ body {
 }
 
 #song_name {
-  opacity: 0.6;
   position: absolute;
+  opacity: 0.6;
   top: 1%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 100%;
   font-size: 1em;
   margin-top: 200px;
-  color: white;
 }
 
 #songer {
-  opacity: 0.6;
-  color: white;
   position: absolute;
+  opacity: 0.6;
   top: 1%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -299,4 +300,20 @@ body {
 }
 .light {
   opacity: 0.6;
+}
+#song_lrc{
+  opacity: 0.6;
+  line-height: 34px;
+  transition: transform 0.1s ease-out;
+  margin-top: -136px;
+}
+.on{
+  color: #31c27c;
+}
+#song_lrc_info{
+  position: absolute;
+  width: 100%;
+  top: 320px;
+  height: 350px;
+  -webkit-mask-image: linear-gradient(180deg,hsla(0,0%,100%,0) 0,hsla(0,0%,100%,.6) 15%,#fff 25%,#fff 75%,hsla(0,0%,100%,.6) 85%,hsla(0,0%,100%,0));
 }

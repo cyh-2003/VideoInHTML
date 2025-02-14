@@ -111,7 +111,7 @@ function change(num) {
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata.title = path[id]["name"]
         navigator.mediaSession.metadata.artist = path[id]["songer"]
-        navigator.mediaSession.metadata.artwork = [{ src: "images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },]
+        navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },]
     }
     song_list_dom(num, true)
     music.pause()
@@ -120,8 +120,8 @@ function change(num) {
     music.play()
     btn_play.className = "pause"
     update()
-    song_img.style.backgroundImage = "url(images/album/" + path[num]["album"] + ")"
-    document.body.style.backgroundImage = "url(images/album/" + path[num]["album"] + ")"
+    song_img.style.backgroundImage = "url(./images/album/" + path[num]["album"] + ")"
+    document.body.style.backgroundImage = "url(./images/album/" + path[num]["album"] + ")"
     song_name.innerText = "歌曲名：" + path[num]["name"]
     songer.innerText = "歌手：" + path[num]["songer"]
 }
@@ -248,7 +248,7 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
 }
 //支持Media Session API
 if ('mediaSession' in navigator) {
-    navigator.mediaSession.metadata = new MediaMetadata({})
+    navigator.mediaSession.metadata = new MediaMetadata()
     navigator.mediaSession.setActionHandler('play', () => { play() })
     navigator.mediaSession.setActionHandler('pause', () => { play() })
     navigator.mediaSession.setActionHandler('seekbackward', () => { music.currentTime -= 3 })
@@ -256,3 +256,31 @@ if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', () => { prev_song() })
     navigator.mediaSession.setActionHandler('nexttrack', () => { next_song() })
 }
+//歌词
+let song_lrc_list = []
+let result = music_lrc.split('\n')
+for (let i = 0; i < result.length; i++) {
+    let div_lrc = document.createElement('div')
+    let text = result[i].replace(/\[\d{2}:\d{2}(?:\.\d{2})?\]/, '')
+    div_lrc.textContent = text
+    song_lrc.appendChild(div_lrc)
+
+    let match = result[i].match(/\[\d{2}:\d{2}(?:\.\d{2})?\]/)[0].match(/\[(\d{2}):(\d{2})(?:\.(\d{1,2}))?\]/)
+    const milliseconds = match[3] ? parseInt(match[3], 10) : 0
+    const totalSeconds = parseInt(match[1], 10) * 60 + parseInt(match[2], 10) + milliseconds / 100
+    song_lrc_list.push({ time: totalSeconds, text: text })
+}
+
+music.addEventListener('timeupdate', () => {
+    let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
+    index--
+    song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
+    let on = document.querySelector('.on')
+    if (on) on.classList.remove('on')
+    if (index > 0) {
+        index = index + 6//根据br数量添加
+    } else {
+        index = song_lrc_list.length + 5
+    }
+    song_lrc.children[index].classList.add('on')
+})

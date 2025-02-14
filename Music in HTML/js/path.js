@@ -1,2 +1,84 @@
 let path = {
+    1: {
+        "name": "シカ色デイズ (鹿色days)",
+        "path": "one.m4a",
+        "album": "bg1.webp",
+        "songer": "潘惠美 (潘めぐみ)",
+        "lrc": "W3RpOuOCt+OCq+iJsuODh+OCpOOCuiAo6bm/6ImyZGF5cykgKOOAium5v+S5g+WtkOS5g+WtkOiZjuinhueciOeciOOAi1RW5Yqo55S754mH5aS05puyKV0KW2FyOua9mOOCgeOBkOOBvy/ol6TnlLDlkrIv55Sw6L6655WZ5L6dL+WSjOaziemiqOiKsV0KW2FsOuOCt+OCq+iJsuODh+OCpOOCul0KW2J5Ol0KW29mZnNldDowXQpba2FuYTox44GE44KNMeOBr+OCkzHjgbXjgZgx44GfMeOBleOBjTHjgZ8x44Gq44G5MeOCizHjgYQx44GEMeOBmuOBvzHjgbXjgYYx44GLMeOBlzHjgY3jgofjgY8x44KPMeOBjDHjgobjgYYx44GNMeOBvzHjgoEx44Gh44GLMeOBlOOCjTHjgaYx44Gq44G/MeOCgDHjgZLjgpMy44Gq44GL44G+MeOBizHjgZDjgYYx44Gm44GEMeOCguOBjzHjgYrjgakx44KIMeOBgjHjga/jgpMx44GZ44GGMeOCiDHjgZ3jgY8x44G1MeOBizHjga7jgYYx44GE44KNMeOBvjHjgb4x44G+MeOBhOOCjTHjga8x44Gm44KTMeOBk+OBhjHjgarjgpMx44GN44G/MuOBiOOBjOOBijHjgZLjgpMx44GNMeOBvuOCkzHjgYbjgpMx44KB44GEMeOBkzHjgZcx44Gf44KTMeOBn+OCkzHjgY3jgb8x44GLMeOBhDHjgYzjgYQx44GV44KPMeOBpDHjgZTjgYYx44GC44GPMeOBtjHjgajjgoIx44GR44KPMeOBv+OBoTHjgZgx44Gg44GEMeOBi+OBnzHjgaYx44GT44GIMeOBsuOBszHjgaEx44GN44KF44GGMeOBuzHjgYvjgb8x44Gk44GLMeOBguOBjDHjgYvjgb8x44GTMeOBsOOCkzHjgbDjgpMx44GW44GEMeOBi+OBvzHjgaTjgYsx44GC44GMMeOBi+OBvzHjgZMx44Gw44KTMeOBsOOCkzHjgZbjgYQx44Gb44GEMeOBl+OCheOCkzHjgYvjgYzjgoQx44G+44G2MeOBr+OCkzHjgZnjgYYx44KIMeOBneOBjzHjgbUx44GLMeOBruOBhjHjgYTjgo0x44G+MeOBvjHjgb4x44GE44KNMeOBrzHjgabjgpMx44GT44GGMeOBquOCkzHjgY3jgb8x44GIMeOBjOOBijHjgZLjgpMx44GNMeOBvuOCkzHjgYbjgpMx44KB44GEMeOBkzHjgZcx44Gf44KTMeOBn+OCkzHjgZjjgpMx44KL44GEMeOBizHjgZHjgYQx44GL44GPMeOBjeOBv10KWzAwOjAwLjAwXeOCt+OCq+iJsuODh+OCpOOCuiAtIOa9mOOCgeOBkOOBvy/ol6TnlLDlkrIv55Sw6L6655WZ5L6dL+WSjOaziemiqOiKsQpbMDA6MDAuMThd6K+N77ya44KE44GO44Gs44G+44GL44GqClswMDowMC4yNl3mm7LvvJrlkozos4Doo5XluIwKWzAwOjAwLjI3XeOBrOOCkwpbMDA6MDAuNzdd44GX44GL44Gu44GT44Gu44GT44Gu44GT44GT44GX44Gf44KT44Gf44KTClswMDowMy4yM13jgZfjgYvjga7jgZPjga7jgZPjga7jgZPjgZPjgZfjgZ/jgpPjgZ/jgpMKWzAwOjA1Ljg4XeOBl+OBi+OBruOBk+OBruOBk+OBruOBk+OBk+OBl+OBn+OCk+OBn+OCkwpbMDA6MDguNDdd44GX44GL44Gu44GT44Gu44GT44Gu44GT44GT44GX44Gf44KT44Gf44KTClswMDoxMC43MV3jgazjgpMg44Gs44KTClswMDoyMS42OV3jgZfjgYvjga7jgZMg44Go44GT44Go44GTClswMDoyMi45N13jgYLjgonjgo/jgosg44Gu44GT44Gu44GTClswMDoyNC4yMF3jgaTjga7jgaTjga4g44G044KH44GT44Gz44KH44GTClswMDoyNS42MF3opovjgZ/nm67jga/jgYrjgavjgoPjga7jgZPvvJ8KWzAwOjI2Ljk5Xei/kemgg+OCpuODr+OCteOBriDjgarjgYvjgarjgYvjgq3jg6/jg6Ljg44KWzAwOjI5LjQ4XeOBiuaJi+S4puOBhOOBi+OBu+OBqSDjgbjjgarjgaHjgofjgZPvvJ8KWzAwOjMyLjAxXeOCueOCtOOCr+ODoOOCq+OCt+OCq+ODqQpbMDA6MzMuNDRd44K444Oj44OR44Oz44OL44K744Kk44K944KvClswMDozNC43NF3jgrfjgqvjgZvjgpPjgbnjgYTjgarjgonnhKHpmZDjgavjgY/jgaDjgZXjgYQKWzAwOjM3LjM4XeODiOODiuOCq+OCpOOBr+S7sumWkyDjgqvjg6Ljgrfjgqvjga/jgqbjgrfnp5EKWzAwOjQwLjA1XeOBp+OCguOBp+OCguOBvuOBqOOCgeOBpuWBtui5hOebrgpbMDA6NDIuNjFd44Gs44KT44Gu44K544OG44OD44OX44Gn6LiK44KN44GGClswMDo0OC4wNV3lpJzjgYzmmI7jgZHjgovjgb7jgacKWzAwOjUwLjM5XeOCj+OCk+OBpOODvOOBmeOCiuODvApbMDA6NTEuNTld44Gq44KT44Gp44Gg44Gj44Gm5Y+N6Iq744GX44GmIOOBrOOBrOOBrOOCkwpbMDA6NTQuMjFd5LqI5ris5LiN5Y+v6IO9IOOCt+OCq+iJsuODh+OCpOOCugpbMDA6NTcuMzVd44Ki44OQ44Oz44Ku44Oj44Or44OJ44Gn44Kq44O844Op44KkClswMDo1OS41NF3jgqvjgqrjgrnlopfjgZflopfjgZcKWzAxOjAxLjkxXeOBhOOBpOOBrumWk+OBq+OCr+OCu+OBq+OBquOBo+OBpiDjgazjgazjgazjgpMKWzAxOjA0Ljc1XeODj+ODgeODo+OBp+ODoeODgeODo+OBquOCt+OCq+iJsuODh+OCpOOCugpbMDE6MDcuNzld56C05aSp6I2S44Gw44Gj44GhIGNvbWUgb24KWzAxOjEwLjA2XeS9leOBp+OCguOCouODqiDjg6vjg7zjg6vjgarjgpPjgabjg4rjgrcKWzAxOjEyLjc5XeWQm+OBrueskemhlOOBp+WFg+awl+a6gOOCv+ODswpbMDE6MTUuMTld44KC44GX44GL44GX44Gm6YGL5ZG944Gu44G+44G+IG15IGRlZXIKWzAxOjE4LjA2XeOBk+OBk+OCjeOBruOBqeOBk+OBi+OBp+iZjuimlueciOOAhQpbMDE6MjAuNTJd5ZCb44Go44Gq44KJ44GE44Gk44G+44Gn44KCClswMToyMy4yN13jgZfjgYvjga7jgZPjga7jgZPjga7jgZPjgZPjgZfjgZ/jgpPjgZ/jgpMKWzAxOjI1LjgzXeOBl+OBi+OBruOBk+OBruOBk+OBruOBk+OBk+OBl+OBn+OCk+OBn+OCkwpbMDE6MjguNTRd44GX44GL44Gu44GT44GX44GL5Yud44Gf44KTClswMToyOS45M13jgYrjgaDjgabjgorjgoPjgqTjg4HjgrPjg63vvJ8KWzAxOjMxLjI4XeOBhOOChOOBhOOChOaEj+WkluOBqCDjg4Tjg6/jg6Ljg47jgYvjgoLjgogKWzAxOjMzLjc4XeOChOOCi+OBk+OBqOOBquOBmeOBk+OBqCDjg4njgr/jg5Djgr/pqJLjgY7jgacKWzAxOjM2LjQ2XemDveWQiOOBjOaCquOBkeOCiuOCg+ODhuODrOODneODvOODiO+8nwpbMDE6MzkuMDJd44KI44GG44GT44Gd44K344Kr6YOo44G4IOOBguOBpOOBvuOCjOOCt+OCq+WPiwpbMDE6NDEuNzJd44K344Kr44Gr44Gq44KK44Gf44GR44KK44KDIOmZuuOBl+OBhOmBk+OBoOOCvgpbMDE6NDQuMjdd44Kk44Oe44OJ44KtSkvjgarjgonmmYLku6Pjga/jgrfjgqvjgafjgZfjgocKWzAxOjQ3LjAwXeOCt+OCq+OBm+OCk+OBueOBhOeJh+aJi+OBqyDjga/jgYQg44Od44O844K6ClswMTo0OS41NF3jgazjgpPjga7lo7DjgYzpn7/jgY/jgogKWzAxOjU0LjgzXeWcsOeQg+OCkuOBk+OBiOOBpiDjganjgZPjgb7jgafjgoIKWzAyOjA5LjExXeOCr+ODrOOCpOOCuOODvCDjgZ3jgozjgaPjgabopJLjgoHjgabjgovvvJ8KWzAyOjE0LjQyXeODiOODquODg+OCreODvOOBp+OBhOOBhOOBmOOCg+OCkwpbMDI6MTUuNzdd44OX44OB44On44OY44Oz44K2ClswMjoxOS42OF3npZ7jga7kvb/jgYTjgZ/jgovjgrfjgqvjgpLltIfjgoHjgogKWzAyOjIyLjMxXeOBl+OBi+OBruOBk+elnuOBruWtkOS4h+OAheatswpbMDI6MjQuODJd56We44Gu5L2/44GE44Gf44KL44K344Kr44KS5bSH44KB44KIClswMjoyNy41MF3jgZfjgYvjga7jgZPnpZ7jga7lrZDkuIfjgIXmrbMKWzAyOjMwLjE1XemdkuaYpeOBo+OBpuOChOOBpOOBi+OCgiDjgarjgpPjgaYKWzAyOjMyLjcwXeOCreODqeODquOCreODqeODqiDovJ3jgYTjgabjgovjga0KWzAyOjM1Ljc2XeecqeOBl+OBmeOBjuOCi+OBquOCiQpbMDI6MzcuOTVd44Kw44Op44K144Oz44Gv44GEKOODu+KIgOODuynjgaTjg4njgr7jg7wKWzAyOjQwLjI3XeOBquOCk+OBqeOBoOOBo+OBpuWPjeiKu+OBl+OBpiDjgazjgazjgazjgpMKWzAyOjQzLjE1XeS6iOa4rOS4jeWPr+iDvSDjgrfjgqvoibLjg4fjgqTjgroKWzAyOjQ2LjE4XeOCouODkOODs+OCruODo+ODq+ODieOBp+OCquODvOODqeOCpApbMDI6NDguNDNd44Kr44Kq44K55aKX44GX5aKX44GXClswMjo1MC43MF3jgYTjgaTjga7plpPjgavjgq/jgrvjgavjgarjgaPjgaYg44Gs44Gs44Gs44KTClswMjo1My43NV3jg4/jg4Hjg6Pjgafjg6Hjg4Hjg6PjgarjgrfjgqvoibLjg4fjgqTjgroKWzAyOjU2LjY1XeegtOWkqeiNkiDjgbDjgaPjgaFjb21lIG9uClswMjo1OC44NF3kvZXjgafjgoLjgqLjg6og44Or44O844Or44Gq44KT44Gm44OK44K3ClswMzowMS42OF3lkJvjga7nrJHpoZTjgaflhYPmsJfmuoDjgr/jg7MKWzAzOjA0LjEzXeOCguOBl+OBi+OBl+OBpumBi+WRveOBriDjgb4g44G+IG15IGRlZXIg77yfClswMzowNi44N13jgZPjgZPjgo3jga7jganjgZPjgYvjgafomY7oppbnnIjjgIUKWzAzOjA5LjM1XeS6uumhnuOCt+OCq+WMluioiOeUuwpbMDM6MTIuMDFd44Gd44KT44Gq44GT44Go44Gv44GV44Gb44Gq44GEClswMzoxNC4zMF0o44Gn44KCKQpbMDM6MTQuNzVd5ZCb44Go44Gq44KJ44GE44Gk44G+44Gn44KCCg=="
+    }
 }
+let music_lrc = `[00:00.00]シカ色デイズ - 潘めぐみ/藤田咲/田辺留依/和泉風花
+[00:00.18]词：やぎぬまかな
+[00:00.26]曲：和賀裕希
+[00:00.27]ぬん
+[00:00.77]しかのこのこのここしたんたん
+[00:03.23]しかのこのこのここしたんたん
+[00:05.88]しかのこのこのここしたんたん
+[00:08.47]しかのこのこのここしたんたん
+[00:10.71]ぬん ぬん
+[00:21.69]しかのこ とことこ
+[00:22.97]あらわる のこのこ
+[00:24.20]つのつの ぴょこびょこ
+[00:25.60]見た目はおにゃのこ？
+[00:26.99]近頃ウワサの なかなかキワモノ
+[00:29.48]お手並いかほど へなちょこ？
+[00:32.01]スゴクムカシカラ
+[00:33.44]ジャパンニセイソク
+[00:34.74]シカせんべいなら無限にください
+[00:37.38]トナカイは仲間 カモシカはウシ科
+[00:40.05]でもでもまとめて偶蹄目
+[00:42.61]ぬんのステップで踊ろう
+[00:48.05]夜が明けるまで
+[00:50.39]わんつーすりー
+[00:51.59]なんどだって反芻して ぬぬぬん
+[00:54.21]予測不可能 シカ色デイズ
+[00:57.35]アバンギャルドでオーライ
+[00:59.54]カオス増し増し
+[01:01.91]いつの間にクセになって ぬぬぬん
+[01:04.75]ハチャでメチャなシカ色デイズ
+[01:07.79]破天荒ばっち come on
+[01:10.06]何でもアリ ルールなんてナシ
+[01:12.79]君の笑顔で元気満タン
+[01:15.19]もしかして運命のまま my deer
+[01:18.06]こころのどこかで虎視眈々
+[01:20.52]君とならいつまでも
+[01:23.27]しかのこのこのここしたんたん
+[01:25.83]しかのこのこのここしたんたん
+[01:28.54]しかのこしか勝たん
+[01:29.93]おだてりゃイチコロ？
+[01:31.28]いやいや意外と ツワモノかもよ
+[01:33.78]やることなすこと ドタバタ騒ぎで
+[01:36.46]都合が悪けりゃテレポート？
+[01:39.02]ようこそシカ部へ あつまれシカ友
+[01:41.72]シカになりたけりゃ 険しい道だゾ
+[01:44.27]イマドキJKなら時代はシカでしょ
+[01:47.00]シカせんべい片手に はい ポーズ
+[01:49.54]ぬんの声が響くよ
+[01:54.83]地球をこえて どこまでも
+[02:09.11]クレイジー それって褒めてる？
+[02:14.42]トリッキーでいいじゃん
+[02:15.77]プチョヘンザ
+[02:19.68]神の使いたるシカを崇めよ
+[02:22.31]しかのこ神の子万々歳
+[02:24.82]神の使いたるシカを崇めよ
+[02:27.50]しかのこ神の子万々歳
+[02:30.15]青春ってやつかも なんて
+[02:32.70]キラリキラリ 輝いてるね
+[02:35.76]眩しすぎるなら
+[02:37.95]グラサンはい(・∀・)つドゾー
+[02:40.27]なんどだって反芻して ぬぬぬん
+[02:43.15]予測不可能 シカ色デイズ
+[02:46.18]アバンギャルドでオーライ
+[02:48.43]カオス増し増し
+[02:50.70]いつの間にクセになって ぬぬぬん
+[02:53.75]ハチャでメチャなシカ色デイズ
+[02:56.65]破天荒 ばっちcome on
+[02:58.84]何でもアリ ルールなんてナシ
+[03:01.68]君の笑顔で元気満タン
+[03:04.13]もしかして運命の ま ま my deer ？
+[03:06.87]こころのどこかで虎視眈々
+[03:09.35]人類シカ化計画
+[03:12.01]そんなことはさせない
+[03:14.30](でも)
+[03:14.75]君とならいつまでも`
+//music_lrc = atob(music_lrc)

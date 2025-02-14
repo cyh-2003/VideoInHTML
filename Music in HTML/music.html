@@ -20,42 +20,57 @@
                 <div class="light">歌手</div>
                 <div class="light">时长</div>
                 <!--  -->
-                <div id="song_info">
-                    <div id="song_img"></div>
-                    <div id="song_name"></div>
-                    <div id="songer"></div>
+                <div class="light id" id="1">1</div>
+                <div>
+                    <div class="change">シカ色デイズ (鹿色days)</div>
+                    <div class="change play_icon" onclick="change(1)"></div>
                 </div>
+                <div class="light">潘惠美 (潘めぐみ)</div>
+                <div class="light">03:21</div>
+                <!--  -->
             </div>
-            <!-- 下部分 -->
-            <div id="player_ft">
-                <div id="btn_prev"></div>
-                <div id="btn_play"></div>
-                <div id="btn_next"></div>
-                <div id="player_ft_main">
-                    <div id="player_music_info">&nbsp;</div>
-                    <div id="player_progress">
-                        <div id="player_progress_inner"></div>
-                        <div id="player_progress_played">
-                            <div id="player_progress_dot"></div>
-                        </div>
-                        <div id="player_progress_click"> </div>
+            <div id="song_info">
+                <div id="song_img"></div>
+                <div id="song_name"></div>
+                <div id="songer"></div>
+                <div id="song_lrc_info">
+                    <div id="song_lrc">
+                        <!-- 歌词位置 -->
+                        <br><br><br><br><br><br>
                     </div>
-                    <div id="player_music_time">&nbsp;</div>
-                </div>
-                <div id="btn_loop"></div>
-                <!-- 音量 -->
-                <div id="player_voice">
-                    <div id="voice_logo"></div>
-                    <div id="voice_inner"></div>
-                    <div id="voice_overed">
-                        <div id="voice_dot"></div>
-                    </div>
-                    <div id="voice_click"></div>
                 </div>
             </div>
         </div>
-        <script type="text/javascript" src="./js/path.js"></script>
-        <script type="text/javascript" src="./js/music.js"></script>
+        <!-- 下部分 -->
+        <div id="player_ft">
+            <div id="btn_prev"></div>
+            <div id="btn_play"></div>
+            <div id="btn_next"></div>
+            <div id="player_ft_main">
+                <div id="player_music_info">&nbsp;</div>
+                <div id="player_progress">
+                    <div id="player_progress_inner"></div>
+                    <div id="player_progress_played">
+                        <div id="player_progress_dot"></div>
+                    </div>
+                    <div id="player_progress_click"> </div>
+                </div>
+                <div id="player_music_time">&nbsp;</div>
+            </div>
+            <div id="btn_loop"></div>
+            <!-- 音量 -->
+            <div id="player_voice">
+                <div id="voice_logo"></div>
+                <div id="voice_inner"></div>
+                <div id="voice_overed">
+                    <div id="voice_dot"></div>
+                </div>
+                <div id="voice_click"></div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="./js/path.js"></script>
+    <script type="text/javascript" src="./js/music.js"></script>
 </body>
 
 </html>
