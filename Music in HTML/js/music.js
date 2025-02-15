@@ -296,12 +296,16 @@ if ('mediaSession' in navigator) {
 //歌词向下移动
 music.addEventListener('timeupdate', () => {
     if (music_resource[id].lrc) {
-        let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
+        let index = song_lrc_list.findIndex((e) => e.time >= music.currentTime)
         index--
-        song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
+        if (index == -2) {
+            song_lrc.style.transform = 'translateY(-' + song_lrc_list.length * 34 + 'px)'
+        } else {
+            song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
+        }
         let on = document.querySelector('.on')
         if (on) on.classList.remove('on')
-        if (index > 0) {
+        if (index >= 0) {
             index = index + 7//根据br数量添加
         } else {
             index = song_lrc_list.length + 6
