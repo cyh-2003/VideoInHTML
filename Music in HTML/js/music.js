@@ -300,16 +300,13 @@ music.addEventListener('timeupdate', () => {
         index--
         if (index == -2) {
             song_lrc.style.transform = 'translateY(-' + song_lrc_list.length * 34 + 'px)'
+            index = song_lrc_list.length + 6
         } else {
             song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
+            index = index + 7//根据br数量添加
         }
         let on = document.querySelector('.on')
         if (on) on.classList.remove('on')
-        if (index >= 0) {
-            index = index + 7//根据br数量添加
-        } else {
-            index = song_lrc_list.length + 6
-        }
         song_lrc.children[index].classList.add('on')
     }
 })
