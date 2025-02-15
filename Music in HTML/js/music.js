@@ -4,6 +4,10 @@ let requestID
 let music_time
 let id = 1
 music.volume = .6
+//歌词变量
+let song_lrc_list = []
+let result = music_lrc.split('\n')
+let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?\]/
 //格式化时间
 function formatTime(seconds) {
     let min = Math.floor(seconds / 60)
@@ -109,21 +113,43 @@ function song_list_dom(id, bool) {
 function change(num) {
     id = num
     if ('mediaSession' in navigator) {
-        navigator.mediaSession.metadata.title = path[id]["name"]
-        navigator.mediaSession.metadata.artist = path[id]["songer"]
-        navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + path[id]["album"], sizes: '300x300', type: 'image/webp' },]
+        navigator.mediaSession.metadata.title = music_resource[id].name
+        navigator.mediaSession.metadata.artist = music_resource[id].songer
+        navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + music_resource[id].album, sizes: '300x300', type: 'image/webp' },]
+    }
+    //歌词逻辑
+    song_lrc.innerHTML = ''
+    no_lrc.style.display = ''
+    song_lrc_list = []
+    if (music_resource[num].lrc) {
+        song_lrc.innerHTML = '<br><br><br><br><br><br>'
+        for (let i = 0; i < result.length; i++) {
+            let div_lrc = document.createElement('div')
+            if (result[i].match(re_time)) {
+                let text = result[i].replace(re_time, '')
+                div_lrc.textContent = text
+                song_lrc.appendChild(div_lrc)
+
+                let match = result[i].match(re_time)[0].match(/\[(\d{2}):(\d{2})(?:\.(\d{1,2}))?\]/)
+                const milliseconds = match[3] ? parseInt(match[3], 10) : 0
+                const totalSeconds = parseInt(match[1], 10) * 60 + parseInt(match[2], 10) + milliseconds / 100
+                song_lrc_list.push({ time: totalSeconds })
+            }
+        }
+    } else {
+        no_lrc.style.display = 'block'
     }
     song_list_dom(num, true)
     music.pause()
-    music.src = "./music/" + path[num]["path"]
-    player_music_info.innerText = path[num]["name"]
+    music.src = "./music/" + music_resource[num].path
+    player_music_info.innerText = music_resource[num].name
     music.play()
     btn_play.className = "pause"
     update()
-    song_img.style.backgroundImage = "url(./images/album/" + path[num]["album"] + ")"
-    document.body.style.backgroundImage = "url(./images/album/" + path[num]["album"] + ")"
-    song_name.innerText = "歌曲名：" + path[num]["name"]
-    songer.innerText = "歌手：" + path[num]["songer"]
+    song_img.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
+    document.body.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
+    song_name.innerText = "歌曲名：" + music_resource[num].name
+    songer.innerText = "歌手：" + music_resource[num].songer
 }
 //确保获得音乐的时长
 music.addEventListener('loadedmetadata', () => {
@@ -256,31 +282,19 @@ if ('mediaSession' in navigator) {
     navigator.mediaSession.setActionHandler('previoustrack', () => { prev_song() })
     navigator.mediaSession.setActionHandler('nexttrack', () => { next_song() })
 }
-//歌词
-let song_lrc_list = []
-let result = music_lrc.split('\n')
-for (let i = 0; i < result.length; i++) {
-    let div_lrc = document.createElement('div')
-    let text = result[i].replace(/\[\d{2}:\d{2}(?:\.\d{2})?\]/, '')
-    div_lrc.textContent = text
-    song_lrc.appendChild(div_lrc)
-
-    let match = result[i].match(/\[\d{2}:\d{2}(?:\.\d{2})?\]/)[0].match(/\[(\d{2}):(\d{2})(?:\.(\d{1,2}))?\]/)
-    const milliseconds = match[3] ? parseInt(match[3], 10) : 0
-    const totalSeconds = parseInt(match[1], 10) * 60 + parseInt(match[2], 10) + milliseconds / 100
-    song_lrc_list.push({ time: totalSeconds, text: text })
-}
-
+//歌词向下移动
 music.addEventListener('timeupdate', () => {
-    let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
-    index--
-    song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
-    let on = document.querySelector('.on')
-    if (on) on.classList.remove('on')
-    if (index > 0) {
-        index = index + 6//根据br数量添加
-    } else {
-        index = song_lrc_list.length + 5
+    if (music_resource[id].lrc) {
+        let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
+        index--
+        song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
+        let on = document.querySelector('.on')
+        if (on) on.classList.remove('on')
+        if (index > 0) {
+            index = index + 6//根据br数量添加
+        } else {
+            index = song_lrc_list.length + 5
+        }
+        song_lrc.children[index].classList.add('on')
     }
-    song_lrc.children[index].classList.add('on')
 })

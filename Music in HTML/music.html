@@ -11,6 +11,7 @@
 
 <body>
     <audio></audio>
+    <div id="no_lrc">此歌曲为没有填词的纯音乐，请您欣赏</div>
     <div id="main">
         <div id="player__bd">
             <!-- 列表 -->
@@ -28,6 +29,13 @@
                 <div class="light">潘惠美 (潘めぐみ)</div>
                 <div class="light">03:21</div>
                 <!--  -->
+                <div class="light id" id="2">2</div>
+                <div>
+                    <div class="change">Unwelcome School</div>
+                    <div class="change play_icon" onclick="change(2)"></div>
+                </div>
+                <div class="light">Mitsukiyo</div>
+                <div class="light">02:00</div>
             </div>
             <div id="song_info">
                 <div id="song_img"></div>
@@ -36,7 +44,6 @@
                 <div id="song_lrc_info">
                     <div id="song_lrc">
                         <!-- 歌词位置 -->
-                        <br><br><br><br><br><br>
                     </div>
                 </div>
             </div>

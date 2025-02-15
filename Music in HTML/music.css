@@ -317,3 +317,11 @@ body {
   height: 350px;
   -webkit-mask-image: linear-gradient(180deg,hsla(0,0%,100%,0) 0,hsla(0,0%,100%,.6) 15%,#fff 25%,#fff 75%,hsla(0,0%,100%,.6) 85%,hsla(0,0%,100%,0));
 }
+#no_lrc{
+  display: none;
+  position: absolute;
+  top: 502px;
+  color: #31c27c;
+  left: 1475px;
+  opacity: .6;
+}
