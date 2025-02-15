@@ -1,4 +1,5 @@
-let music_resource = {
+const decoder = new TextDecoder('utf-8')
+const music_resource = {
     1: {
         "name": "シカ色デイズ (鹿色days)",
         "path": "one.m4a",
@@ -13,15 +14,4 @@ let music_resource = {
         "songer": "Mitsukiyo",
         "lrc": ""
     }
-
 }
-
-const binaryString = atob(music_resource[1].lrc)
-const uint8Array = new Uint8Array(binaryString.length)
-for (let i = 0; i < binaryString.length; i++) {
-    uint8Array[i] = binaryString.charCodeAt(i)
-}
-const decoder = new TextDecoder('utf-8')
-const decodedString = decoder.decode(uint8Array)
-let music_lrc = decodedString
-//decodeURIComponent(escape(atob(music_resource[1].lrc)))

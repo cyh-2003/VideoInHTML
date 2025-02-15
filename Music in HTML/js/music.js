@@ -6,7 +6,7 @@ let id = 1
 music.volume = .6
 //歌词变量
 let song_lrc_list = []
-let result = music_lrc.split('\n')
+let result
 let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?\]/
 //格式化时间
 function formatTime(seconds) {
@@ -118,22 +118,33 @@ function change(num) {
         navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + music_resource[id].album, sizes: '300x300', type: 'image/webp' },]
     }
     //歌词逻辑
+    //歌词解析
+    let binaryString = atob(music_resource[num].lrc)
+    let uint8Array = new Uint8Array(binaryString.length)
+    for (let i = 0; i < binaryString.length; i++) {
+        uint8Array[i] = binaryString.charCodeAt(i)
+    }
+    result = decoder.decode(uint8Array).split('\n')
+    //decodeURIComponent(escape(atob(music_resource[1].lrc)))
+
+    //歌词显示(dom)
     song_lrc.innerHTML = ''
     no_lrc.style.display = ''
     song_lrc_list = []
     if (music_resource[num].lrc) {
-        song_lrc.innerHTML = '<br><br><br><br><br><br>'
+        song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
         for (let i = 0; i < result.length; i++) {
             let div_lrc = document.createElement('div')
             if (result[i].match(re_time)) {
                 let text = result[i].replace(re_time, '')
-                div_lrc.textContent = text
-                song_lrc.appendChild(div_lrc)
-
                 let match = result[i].match(re_time)[0].match(/\[(\d{2}):(\d{2})(?:\.(\d{1,2}))?\]/)
                 const milliseconds = match[3] ? parseInt(match[3], 10) : 0
                 const totalSeconds = parseInt(match[1], 10) * 60 + parseInt(match[2], 10) + milliseconds / 100
-                song_lrc_list.push({ time: totalSeconds })
+                if (text) {
+                    song_lrc_list.push({ time: totalSeconds, text: text })
+                    div_lrc.textContent = text
+                    song_lrc.appendChild(div_lrc)
+                }
             }
         }
     } else {
@@ -291,9 +302,9 @@ music.addEventListener('timeupdate', () => {
         let on = document.querySelector('.on')
         if (on) on.classList.remove('on')
         if (index > 0) {
-            index = index + 6//根据br数量添加
+            index = index + 7//根据br数量添加
         } else {
-            index = song_lrc_list.length + 5
+            index = song_lrc_list.length + 6
         }
         song_lrc.children[index].classList.add('on')
     }
