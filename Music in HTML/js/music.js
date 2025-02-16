@@ -301,7 +301,7 @@ music.addEventListener('timeupdate', () => {
             song_lrc.style.transform = 'translateY(-' + song_lrc_list.length * 34 + 'px)'
             index = song_lrc_list.length + 6
         } else {
-            song_lrc.style.transform = 'translateY(-' + index * 34 + 'px)'
+            song_lrc.style.transform = 'translateY(-' + (index - 1) * 34 + 'px)'
             index = index + 6//根据br数量添加
         }
         let on = document.querySelector('.on')
