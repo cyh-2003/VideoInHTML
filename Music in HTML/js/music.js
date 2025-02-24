@@ -96,15 +96,15 @@ btn_loop.addEventListener("click", () => {
 })
 //歌曲列表变化dom操作
 function song_list_dom(id, bool) {
-    Array.from(document.getElementById('player__main').querySelectorAll('div')).forEach((div) => {
-        div.style.opacity = .6
+    Array.from(player__main.querySelectorAll('div')).forEach((div) => {
+        div.style.opacity = .8
     })
     for (let i = 1; i < songs_length + 1; i++) {
         document.getElementById(i).innerHTML = i
     }
     if (bool) {
         document.getElementById(id).innerHTML = '<img src="./images/wave.gif">'
-        Array.from(document.getElementById('player__main').querySelectorAll('div')).slice(-2 + 6 * id, 4 + id * 6).forEach((div) => {
+        Array.from(player__main.querySelectorAll('div')).slice(-2 + 6 * id, 4 + id * 6).forEach((div) => {
             div.style.opacity = 1
         })
     }
@@ -129,7 +129,6 @@ function change(num) {
 
     //歌词显示(dom)
     song_lrc.innerHTML = ''
-    no_lrc.style.display = ''
     song_lrc_list = []
     if (music_resource[num].lrc) {
         song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
@@ -148,7 +147,7 @@ function change(num) {
             }
         }
     } else {
-        no_lrc.style.display = 'block'
+        song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
     }
     song_list_dom(num, true)
     music.pause()
