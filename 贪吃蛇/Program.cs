@@ -8,7 +8,7 @@ namespace 贪吃蛇
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             Game game = new Game();
             game.Star();

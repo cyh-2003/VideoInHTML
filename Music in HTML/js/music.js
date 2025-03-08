@@ -270,8 +270,12 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
                 music.currentTime = (newX / inner.clientWidth) * music_time
             } else {
                 music.volume = newX / inner.clientWidth
+                if (music.volume == 0) {
+                    voice_logo.className = "no_vocie"
+                } else {
+                    voice_logo.classList.remove("no_vocie")
+                }
             }
-
         }
     }
     document.onmouseup = () => {

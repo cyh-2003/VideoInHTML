@@ -22,7 +22,7 @@ def main(url: str, UserAgent: str = PC):
     except requests.exceptions.SSLError:
         request = requests.get(url, headers={"user-agent": UserAgent}, verify=False)
     soup = BeautifulSoup(request.text, "html.parser")
-    a = soup.findAll("a")
+    a = soup.find_all("a")
     for i in a:
         text = i.string
         href = i.get("href")

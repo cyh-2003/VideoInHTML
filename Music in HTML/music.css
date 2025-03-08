@@ -1,7 +1,7 @@
 * {
   margin: 0;
   padding: 0;
-  caret-color: transparent;
+  user-select: none;
 }
 
 body {
@@ -63,9 +63,9 @@ body {
 }
 
 #player_ft_main {
-  width: 960px;
+  width: 60%;
   position: relative;
-  margin: 0 448px 0 208px;
+  margin: 0 0 0 208px;
   height: 100%;
 }
 
@@ -78,6 +78,7 @@ body {
   color: white;
   font-size: 16px;
 }
+
 
 #player_progress_played {
   width: 0px;
@@ -117,14 +118,15 @@ body {
   top: 4px;
   width: 26px;
   height: 25px;
-  left: 1200px;
+  left: 74.4%;
   background-position: 0 -205px;
 }
 
 #player_voice {
+  margin-left: 1px;
   top: 0;
   height: 50px;
-  left: 1250px;
+  left: 77.6%;
   width: 80px;
   position: absolute;
 }
@@ -356,8 +358,101 @@ body {
   color: #31c27c;
 }
 
+/* 兼容窗口缩小 */
+@media screen and (max-width: 1671px) {
+  #btn_loop {
+    left: 80%;
+  }
+
+  #player_voice {
+    left: 85%;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  #btn_loop {
+    left: 85%;
+  }
+
+  #player_voice {
+    left: 90%;
+  }
+}
+
+@media screen and (min-width: 510px) and (max-width: 990px) {
+
+  #btn_loop,
+  #player_voice {
+    display: none;
+  }
+}
+
+/* 适配2K分辨率 */
 @media screen and (min-width: 2030px) and (max-width: 2048px) {
   #player_ft {
     left: 6%;
+  }
+}
+
+/* 适配手机 */
+@media screen and (max-width: 500px) {
+  html {
+    font-size: 18px;
+  }
+
+  #player__main,
+  #player_ft_main,
+  #player_voice,
+  #btn_loop {
+    display: none;
+  }
+
+  #main {
+    height: 100vh;
+  }
+
+  #main::before {
+    width: 500%;
+  }
+
+  #player__bd {
+    top: 4%;
+  }
+
+  #player_ft {
+    position: absolute;
+    bottom: 1.8rem;
+    width: 8rem;
+  }
+
+  #song_lrc_info {
+    top: 17rem;
+    height: 18rem;
+  }
+
+  #btn_prev,
+  #btn_next,
+  #btn_play {
+    opacity: 1;
+  }
+
+  #song_info {
+    top: 3rem;
+    width: 375px;
+  }
+}
+
+@media screen and (max-height: 780px) {
+  #player_ft {
+    bottom: 1rem;
+  }
+
+  #song_lrc_info {
+    top: 15.5rem;
+    height: 17rem;
+  }
+
+  #song_info {
+    top: 1rem;
   }
 }
