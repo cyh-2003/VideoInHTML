@@ -41,6 +41,7 @@ def main(url: str, UserAgent: str = PC):
             "预告",
             "預告",
             "转为免费",
+            "更新",
         ]  # 用于排除的
         keywordTwo = [
             "免费",
@@ -55,6 +56,7 @@ def main(url: str, UserAgent: str = PC):
             "FOD",
             "免費",
             "收回",
+            "手慢無",
         ]  # 用于白嫖的
         try:
             if any(keyword in text for keyword in keywordOne) or len(text) <= 10:

@@ -1,13 +1,30 @@
 const music = document.querySelector("audio")
-const songs_length = document.getElementsByClassName("id").length
+const decoder = new TextDecoder('utf-8')
+const music_resource = JSON.parse(music_data)
 let requestID
 let music_time
 let id = 1
+let music_Volume = .6
 music.volume = .6
 //歌词变量
 let song_lrc_list = []
 let result
 let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?\]/
+
+//根据data.js数据动态插入
+for (let i in music_resource) {
+    player__main.insertAdjacentHTML('beforeend', `
+        <div class="light id" id="${i}">${i}</div>
+        <div>
+            <div class="change">${music_resource[i].name}</div>
+            <div class="change play_icon" onclick="change(${i})"></div>
+        </div>
+        <div class="light">${music_resource[i].songer}</div>
+        <div class="light">${music_resource[i].time}</div>
+    `)
+}
+const songs_length = document.getElementsByClassName("id").length
+
 //格式化时间
 function formatTime(seconds) {
     let min = Math.floor(seconds / 60)
@@ -20,7 +37,7 @@ btn_play.addEventListener("click", () => {
 })
 //处理播放是否暂停/继续
 function play() {
-    music.pause()
+    //music.pause()
     if (btn_play.className == "") {
         if (music.src == "") change(id)
         music.play()
@@ -64,10 +81,12 @@ voice_logo.addEventListener("click", () => {
     if (voice_logo.className == "") {
         voice_logo.className = "no_vocie"
         voice_logo_Fn(0, 0, 0)
+        if (music.volume != 0) music_Volume = music.volume
     } else {
         voice_logo.classList.remove("no_vocie")
-        let voice_volume_restart = 60 * (voice_inner.clientWidth / 100)
-        voice_logo_Fn(.6, voice_volume_restart, voice_volume_restart)
+        let voice_volume_restart = (music_Volume * 100) * (voice_inner.clientWidth / 100)
+        voice_logo_Fn(music_Volume, voice_volume_restart, voice_volume_restart)
+        if (music.volume == 0) { voice_logo.className = "no_vocie" }
     }
 })
 //音量条dom
@@ -170,13 +189,17 @@ voice_click.addEventListener("click", (event) => {
     voice_overed.style.width = event.offsetX + "px"
     voice_dot.style.left = event.offsetX + "px"
     music.volume = event.offsetX / voice_inner.clientWidth
-    if (music.volume > 0) voice_logo.classList.remove("no_vocie")
+    if (music.volume > 0) {
+        music_Volume = music.volume
+        voice_logo.classList.remove("no_vocie")
+    }
 })
 //实现快捷键
 document.addEventListener('keydown', (event) => {
     let music_volume = Math.floor(music.volume * 100)
     switch (event.key) {
         case " ":
+            event.preventDefault()//阻止网页滚动
             play()
             break
         case "ArrowLeft":
@@ -202,15 +225,21 @@ document.addEventListener('keydown', (event) => {
         case "W":
             let music_volume_up = Math.ceil(music_volume / 10) * 10 + 10
             let width_left = Math.floor(music_volume_up * (voice_inner.clientWidth / 100))
-            music_volume_up > 100 ? undefined : voice_logo_Fn(music_volume_up * .01, width_left, width_left)
-            music_volume_up > 100 ? undefined : voice_logo.classList.remove("no_vocie")
+            if (music_volume_up <= 100) {
+                voice_logo_Fn(music_volume_up * .01, width_left, width_left)
+                voice_logo.classList.remove("no_vocie")
+                music_Volume = music.volume
+            }
             break
         case "ArrowDown":
         case "s":
         case "S":
             let music_volume_down = Math.ceil(music_volume / 10) * 10 - 10
             let width_right = Math.floor(music_volume_down * (voice_inner.clientWidth / 100))
-            if (music_volume_down >= 0) voice_logo_Fn(music_volume_down * .01, width_right, width_right)
+            if (music_volume_down >= 0) {
+                voice_logo_Fn(music_volume_down * .01, width_right, width_right)
+                music_Volume = music.volume
+            }
             if (music.volume == 0) voice_logo.className = "no_vocie"
             break
     }
@@ -218,7 +247,7 @@ document.addEventListener('keydown', (event) => {
 //上一首歌
 function prev_song() {
     id--
-    id == 0 ? id = songs_length : undefined
+    if (id == 0) id = songs_length
     change(id)
 }
 //下一首歌

@@ -187,6 +187,12 @@ body {
   grid-auto-rows: 50px;
   color: white;
   opacity: 0.8;
+  overflow-y: auto;
+  height: 44rem;
+}
+
+#player__main::-webkit-scrollbar {
+  display: none;
 }
 
 .play_icon:hover,
@@ -381,9 +387,13 @@ body {
 
 @media screen and (min-width: 510px) and (max-width: 990px) {
 
-  #btn_loop,
-  #player_voice {
+  #btn_loop {
     display: none;
+  }
+
+  #player_voice {
+    opacity: 0;
+    left: 999%;
   }
 }
 
@@ -402,9 +412,13 @@ body {
 
   #player__main,
   #player_ft_main,
-  #player_voice,
   #btn_loop {
     display: none;
+  }
+
+  #player_voice {
+    left: 999%;
+    opacity: 0;
   }
 
   #main {

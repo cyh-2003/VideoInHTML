@@ -3,37 +3,18 @@
 由于需要写歌词效果的代码添加了一首歌,如果侵犯了您的权益我会及时删除<br>
 会有人看这个仓库吗?
 
-在`player_main`后添加，依次类推
-
-> 以下为例子
-
-```html
-<div class="light id" id="1">1</div>
-<!-- id 两个数字都要改 -->
-<div>
-  <div class="change">シカ色デイズ (鹿色days)</div>
-  <!-- 歌曲名称 -->
-  <div class="change play_icon" onclick="change(1)"></div>
-  <!-- 依次更改数字 -->
-</div>
-<div class="light"></div>
-<!-- 歌手 -->
-<div class="light"></div>
-<!-- 歌曲时间 -->
-```
-
-`path`中
+`data,js`中,这样设计为以后与服务器交换减少工作量,应该用blob
 
 ```js
-let path = {
-  1: {
-    name: "",//歌曲名称
-    path: "",//音乐路径
-    album: "",//音乐封面
-    songer: "",//歌手
-    lrc:""//歌词(base64),纯音乐为""
-  },
-}
+const music_data = `{
+    "1": {
+        "name": "",                   //歌曲名称
+        "time":"03:21",               //歌曲时间
+        "path": "one.m4a",            //歌曲路径
+        "album": "bg1.webp",          //歌曲封面
+        "songer": "潘惠美 (潘めぐみ)", //歌手
+        "lrc": ""                     //歌词文本(base64)
+    }`
 ```
 
 音频路径为 music
