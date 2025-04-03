@@ -5,10 +5,12 @@ let old_text = ''//随便一个字符串
 var timer = 60000
 let tray = null
 
-app.setLoginItemSettings({
-    openAtLogin: true,
-    openAsHidden: true
-})
+// if (app.isPackaged) {
+//     app.setLoginItemSettings({
+//         openAtLogin: true,
+//         openAsHidden: true,
+//     })
+// }
 
 function createWindow(user, msg) {
     const win = new BrowserWindow({
@@ -30,7 +32,7 @@ function createWindow(user, msg) {
         win.hide() //隐藏主程序窗口
     })
     if (tray) tray.destroy()//删除上一个托盘
-    tray = new Tray(path.join(__dirname, './src/pubilc/wechat.png'))
+    tray = new Tray(path.join(__dirname, './src/public/wechat.png'))
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '退出', click: () => {

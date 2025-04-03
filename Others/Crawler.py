@@ -42,6 +42,11 @@ def main(url: str, UserAgent: str = PC):
             "預告",
             "转为免费",
             "更新",
+            "PS5",
+            "Roblox",
+            "giveaway.su",
+            "点数商店",
+            "freeanywhere",
         ]  # 用于排除的
         keywordTwo = [
             "免费",
