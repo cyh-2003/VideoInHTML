@@ -47,6 +47,8 @@ def main(url: str, UserAgent: str = PC):
             "giveaway.su",
             "点数商店",
             "freeanywhere",
+            "下次",
+            "下星期",
         ]  # 用于排除的
         keywordTwo = [
             "免费",
@@ -81,6 +83,7 @@ def 爬虫():
     main("https://keylol.com/t572814-1-1")
     main("https://keylol.com/f319-1")
     main("https://keylol.com/forum.php?m=index&mobile=yes", Phone)
+    main("https://keylol.com/f328-1")
 
 
 def 停止():

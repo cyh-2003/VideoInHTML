@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理</title>
+    <link rel="shortcut icon" href="./music.svg" type="image/x-icon">
+    <link type="text/css" rel="stylesheet" href="./css/admin.css">
+</head>
+
+<body>
+    <div id="msg"></div>
+    <dialog id="dia">
+        <form id="dia_form" enctype="multipart/form-data" onsubmit="return false">
+            <div><label for="name">歌曲名</label>
+                <input type="text" name="name" id="dialog_name" maxlength="50">
+            </div>
+            <div>歌手名
+                <input type="text" name="songer" id="dialog_songer" maxlength="50">
+            </div>
+            <div>时长
+                <input type="text" name="time" id="dialog_time" maxlength="10">
+            </div>
+            <div>专辑封面
+                <div id="div_img"><input type="file" name="image" accept="image/*" id="dialog_file"><img
+                        id="dialog_preview">
+                </div>
+            </div>
+            <div>
+                歌曲<div id="div_music"><input type="file" accept="audio/*" name="music" id="dialog_music">
+                    <div id="dialog_music_name"></div>
+                </div>
+            </div>
+            <div id="dialog_div_lrc">歌词
+                <textarea id="dialog_lrc"></textarea>
+            </div>
+            <div class="dialog_button">
+                <input type="submit" id="submit" value="提交">
+                <input type="button" id="cancel" value="取消">
+            </div>
+        </form>
+    </dialog>
+    <div class="container">
+        <div class="side" id="sidebar">
+            <div id="side_button"></div>
+            <li id="admin"><span>管理</span></li>
+            <li id="upload"><span>上传</span></li>
+            <li id="login_out"><span>退出登录</span></li>
+        </div>
+
+        <div class="weclcome">
+            <img src="./music.svg" style="width: 90px;">
+            <h1>欢迎来到音乐管理页面</h1>
+        </div>
+
+        <div class="main">
+            <div id="main_admin">
+            </div>
+            <div id="main_upload">
+                <form method="post" enctype="multipart/form-data" onsubmit="return false" id="upload_form">
+                    <div><label for="name">歌曲名</label>
+                        <input type="text" name="name" id="name" required maxlength="50">
+                    </div>
+                    <div>歌手名
+                        <input type="text" name="songer" id="songer" required maxlength="50">
+                    </div>
+                    <div>时长
+                        <input type="text" required name="time" id="time" maxlength="10">
+                    </div>
+                    <div>专辑封面
+                        <div id="div_img"><input type="file" name="image" accept="image/*" id="file" required><img
+                                id="preview"></div>
+                    </div>
+                    <div>
+                        歌曲<div id="div_music"><input type="file" accept="audio/*" name="music" id="music" required>
+                            <div id="music_name"></div>
+                        </div>
+                    </div>
+                    <div style="position: absolute;left: 700px;top: 100px;">歌词
+                        <textarea name="lrc" id="lrc"></textarea>
+                    </div>
+                    <input type="submit" value="上传">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script text="text/javascript" src="js/admin.js"></script>
+</body>
+
+</html>

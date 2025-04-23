@@ -1,0 +1,352 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow: hidden;
+}
+
+.weclcome {
+    height: 100px;
+    align-items: center;
+    display: flex;
+    padding: 50px;
+}
+
+.container {
+    user-select: none;
+    display: flex;
+    height: 100vh;
+    position: absolute;
+    width: 100%;
+}
+
+.side {
+    width: 200px;
+    background-color: #f9fbff;
+    transition: width 0.3s;
+    overflow: hidden;
+    height: 100%;
+}
+
+.side.collapsed {
+    width: 50px;
+}
+
+#side_button {
+    padding: 15px;
+    width: 15px;
+    height: 15px;
+    background-image: url(../images/side_left.svg);
+    background-size: cover;
+    position: relative;
+    right: -150px;
+    top: 0;
+    cursor: pointer;
+}
+
+.side li {
+    list-style: none;
+    padding: 15px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.side li:hover {
+    background-color: #daeafe;
+}
+
+.side li::before {
+    content: "•";
+    margin-right: 10px;
+    color: #3498db;
+}
+
+.side.collapsed li span {
+    display: none;
+}
+
+.side.collapsed li::before {
+    margin-right: 0;
+}
+
+.main {
+    display: none;
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.admin_border {
+    background-color: white;
+}
+
+li span {
+    position: absolute;
+    left: 50px;
+}
+
+#main_admin {
+    display: grid;
+    width: 100%;
+    grid-auto-rows: 160px;
+    grid-template-columns: .2fr .7fr .8fr .4fr .4fr 1fr;
+    gap: 2px;
+    font-size: 1.4em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #ccc;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+#main_admin img {
+    width: 150px;
+}
+
+#dia {
+    overflow-x: hidden;
+    position: absolute;
+    left: 20%;
+    top: 10%;
+    width: 1000px;
+    height: 800px;
+    border-radius: 5px;
+}
+
+#dia::backdrop {
+    backdrop-filter: blur(1px);
+}
+
+#main_upload {
+    display: flex;
+    flex-direction: column
+}
+
+#dialog_time,
+#dialog_songer,
+#dialog_name,
+textarea,
+#name,
+#songer,
+#time {
+    width: 200px;
+    height: 30px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 0 5px 0 5px;
+}
+
+#dialog_name:active,
+#dialog_name:focus,
+#dialog_name:hover,
+#dialog_songer:active,
+#dialog_songer:focus,
+#dialog_songer:hover,
+#dialog_time:active,
+#dialog_time:focus,
+#dialog_time:hover,
+textarea:active,
+textarea:focus,
+textarea:hover,
+#time:hover,
+#time:active,
+#time:focus,
+#songer:hover,
+#songer:active,
+#songer:focus,
+#name:hover,
+#name:active,
+#name:focus {
+    border-color: #00a1d6;
+    outline: none;
+}
+
+
+.main label {
+    margin-right: 50px;
+}
+
+#songer {
+    margin-left: 50px;
+}
+
+#time {
+    margin-left: 65px;
+}
+
+
+.main form div {
+    margin: 15px;
+}
+
+#submit,
+#cancel,
+.main input[type="submit"] {
+    width: 120px;
+    height: 45px;
+    line-height: 40px;
+    color: #fff;
+    background: #00a1d6;
+    border: 0;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.main input[type="submit"] {
+    margin: 50px 0 0 110px;
+}
+
+#dialog_music,
+#dialog_file,
+#file,
+#music {
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}
+
+textarea,
+#div_img,
+#div_music {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    border-radius: 5px;
+    margin-left: 100px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+#lrc:hover,
+#div_img:hover,
+#div_music:hover {
+    border-color: #00a1d6;
+}
+
+#dialog_preview,
+#preview {
+    position: absolute;
+    pointer-events: none;
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#div_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+#div_img:hover {
+    cursor: pointer;
+}
+
+#msg {
+    z-index: 1;
+    width: 100px;
+    height: 50px;
+    right: -110px;
+    top: 50px;
+    position: fixed;
+    background-color: #3d92ca;
+    line-height: 50px;
+    border-radius: 5px;
+    padding-left: 10px;
+    transition: right 0.5s ease-in-out;
+}
+
+#msg.show {
+    right: 0;
+}
+
+#dialog_music_name,
+#music_name {
+    pointer-events: none;
+    position: absolute;
+}
+
+.admin_border {
+    background-color: white;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#main_admin button {
+    margin: 2px;
+    --button_radius: 0.75em;
+    --button_color: #e8e8e8;
+    --button_outline_color: #000000;
+    font-size: 17px;
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--button_radius);
+    background: var(--button_outline_color);
+}
+
+#main_admin .button_top {
+    display: block;
+    box-sizing: border-box;
+    border: 2px solid var(--button_outline_color);
+    border-radius: var(--button_radius);
+    padding: 0.75em 1.5em;
+    background: var(--button_color);
+    color: var(--button_outline_color);
+    transform: translateY(-0.2em);
+    transition: transform 0.1s ease;
+}
+
+#main_admin button:hover .button_top {
+    transform: translateY(-0.33em);
+}
+
+#main_admin button:active .button_top {
+    transform: translateY(0);
+}
+
+textarea {
+    font-size: 1.2em;
+    width: 500px;
+    height: 592px;
+}
+
+#dialog_div_lrc {
+    position: absolute;
+    left: 36%;
+    top: 0;
+}
+
+.dialog_button {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    bottom: 5%;
+    justify-content: space-around;
+}
+
+dialog div {
+    margin: 10px;
+}
+
+#dialog_songer,
+#dialog_name {
+    margin-left: 40px;
+}
+
+#dialog_time {
+    margin-left: 56px;
+}
