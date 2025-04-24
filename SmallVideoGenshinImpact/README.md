@@ -20,3 +20,7 @@ json格式
     "2": "海露花BV15E421N7T1"
 }
 ```
+
+# 根据开源协议署名
+- BSD [pychrome]https://github.com/fate0/pychrome
+- MIT [keyboard]https://github.com/boppreh/keyboard

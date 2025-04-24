@@ -25,3 +25,7 @@ python main.py
 ```bash
 python web.py
 ```
+
+# 根据开源协议署名
+- MIT [langchain](https://github.com/hwchase17/langchain)
+- Apache-2.0 license [streamlit](https://github.com/streamlit/streamlit)

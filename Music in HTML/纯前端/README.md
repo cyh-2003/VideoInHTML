@@ -3,10 +3,8 @@
 由于需要写歌词效果的代码添加了一首歌,如果侵犯了您的权益我会及时删除<br>
 会有人看这个仓库吗?
 
-`data,js`中,这样设计为以后与服务器交互减少工作量,应该用blob
-
 ```js
-const music_data = `{
+const music_data = {
     "1": {
         "name": "",                   //歌曲名称
         "time":"03:21",               //歌曲时间
@@ -14,7 +12,8 @@ const music_data = `{
         "album": "bg1.webp",          //歌曲封面
         "songer": "潘惠美 (潘めぐみ)", //歌手
         "lrc": ""                     //歌词文本(base64)
-    }`
+    }
+}
 ```
 
 音频路径为 music
