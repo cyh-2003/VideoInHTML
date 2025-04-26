@@ -1,6 +1,7 @@
 const main = document.getElementsByClassName('main')[0]
 globalThis.music_data
 globalThis.dia_id
+globalThis.music_file_name
 
 fetch('/get_songs').then(res => res.json()).then(data => {
     music_data = data
@@ -48,6 +49,7 @@ side_button.addEventListener('click', function () {
     this.style.backgroundImage = sidebar.classList.contains('collapsed') ? "url(./images/side_right.svg)" : "url(./images/side_left.svg)"
     this.style.right = sidebar.classList.contains('collapsed') ? "0" : "-150px"
 })
+
 //侧边栏切换管理
 admin.addEventListener('click', function () {
     main_upload.style.display = "none"
@@ -55,6 +57,7 @@ admin.addEventListener('click', function () {
     this.style.backgroundColor = "#daeafe"
     upload.style.backgroundColor = ""
     same(20)
+    main_admin_new()
 })
 
 //上移
@@ -83,6 +86,7 @@ function down(id) {
     }
     admin_fetch('/update_song', JSON.stringify(music_data))
 }
+
 //删除
 function del(id) {
     delete music_data[id]
@@ -93,6 +97,7 @@ function del(id) {
     })
     admin_fetch('/update_song', JSON.stringify(music_data))
 }
+
 //编辑
 function edit(id) {
     dia_id = id
@@ -105,6 +110,7 @@ function edit(id) {
     dialog_preview.style.display = 'block'
     dialog_lrc.value = music_data[id].lrc
 }
+
 //侧边栏切换上传
 upload.addEventListener('click', function () {
     admin.style.backgroundColor = ""
@@ -113,11 +119,13 @@ upload.addEventListener('click', function () {
     this.style.backgroundColor = "#daeafe"
     same(100)
 })
+
 function same(padding) {
     document.getElementsByClassName('weclcome')[0].style.display = 'none'
     main.style.display = 'block'
     main.style.padding = `${padding}px`
 }
+
 dialog_file.addEventListener('change', (e) => {
     file_preview(e, dialog_preview)
 })
@@ -152,6 +160,7 @@ submit.addEventListener('click', () => {
         songer: dialog_songer.value,
         lrc: dialog_lrc.value
     }
+    admin_fetch('/update_song', JSON.stringify(music_data))
     dia.close()
 })
 
@@ -162,16 +171,37 @@ cancel.addEventListener('click', () => {
 music.addEventListener('change', (e) => {
     music_name.innerText = e.target.files[0].name
 })
+
 //上传歌曲
 upload_form.addEventListener("submit", (e) => {
     const formData = new FormData(e.target)
+    if (music.files[0].size > 5242880) {
+        formData.delete('music')
+        music_file_name = music.files[0].name
+        formData.append('musicname', music_file_name)
+        const chunks = chunkFun(music.files[0])
+        uploadFile(chunks)
+    }
     admin_fetch('/add_song', formData)
+    upload_form.reset()
+    preview.style.display = "none"
+    music_name.style.display = "none"
 })
+
 //编辑歌曲信息
 dia_form.addEventListener('submit', (e) => {
     const formData = new FormData(e.target)
+    if (dialog_music.length > 0) {
+        if (dialog_music.files[0].size > 5242880) {
+            formData.delete('music')
+            music_file_name = dialog_music.files[0].name
+            const chunks = chunkFun(dialog_music.files[0])
+            uploadFile(chunks)
+        }
+    }
     admin_fetch('/update_song_info', formData)
 })
+
 //退出登录
 login_out.addEventListener('click', () => {
     fetch("/login_out").then(res => res.json()).then((data) => {
@@ -184,6 +214,7 @@ login_out.addEventListener('click', () => {
         }, 600)
     })
 })
+
 /**
 * 发送请求
 * @param {string} url 
@@ -210,6 +241,49 @@ function admin_fetch(url, data) {
         main_admin_new()
         setTimeout(() => {
             msg.classList.remove('show')
-        }, 600)
+        }, 700)
+    })
+}
+
+//大文件上传分片,5MB一个分片
+const chunkFun = (file, size = 5242880) => {
+    const chunks = []
+    for (let i = 0; i < file.size; i += size) {
+        chunks.push(file.slice(i, i + size))
+    }
+    return chunks
+}
+
+//大文件分片上传
+const uploadFile = (chunks) => {
+    const List = []
+    for (let i = 0; i < chunks.length; i++) {
+        const formData = new FormData()
+        formData.append('index', i)
+        formData.append('total', chunks.length)
+        formData.append('fileName', 'music')
+        formData.append('music', chunks[i])
+        List.push(fetch('/upload_large_file', {
+            method: 'POST',
+            body: formData
+        }))
+    }
+    Promise.all(List).then(res => {
+        fetch('/merge_large_file', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                fileName: music_file_name
+            })
+        }).then(res => res.json()).then(data => {
+            msg.innerText = data.data.msg
+            msg.classList.add('show')
+            setTimeout(() => {
+                msg.classList.remove('show')
+                fetch('/get_songs').then(res => res.json()).then(data => {
+                    music_data = data
+                })
+            }, 700)
+        })
     })
 }

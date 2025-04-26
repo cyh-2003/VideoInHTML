@@ -21,10 +21,16 @@ const upload = multer({
                 cb(null, 'public/images/album/')
             } else if (file.mimetype.startsWith('audio/')) {
                 cb(null, 'public/music/')
+            } else if (file.mimetype.includes('octet-stream')) {
+                cb(null, 'uploads/')
             }
         },
         filename: function (req, file, cb) {
-            cb(null, file.originalname)
+            if (file.mimetype.includes('octet-stream')) {
+                cb(null, req.body.index + '-' + req.body.fileName)
+            } else {
+                cb(null, file.originalname)
+            }
         }
     })
 })
@@ -62,6 +68,7 @@ function createResponse(code, message, dataMsg, redirect, token) {
         }
     }
 }
+
 //管理路由
 app.get("/admin", (req, res) => {
     jwt.verify(req.cookies.token, sercret, (err, decoded) => {
@@ -72,18 +79,20 @@ app.get("/admin", (req, res) => {
         }
     })
 })
+
 //登录路由
 app.get("/login", (req, res) => {
     res.sendFile(__dirname + "/public/login.html")
 })
+
 //登录
 app.post("/login", upload.none(), (req, res) => {
-    if (req.body.username == 1 && req.body.password == admin.password) {
-        const token = jwt.sign({ username: req.body.username }, sercret, { algorithm: "HS256", expiresIn: "1d" })
+    if (req.body.username == req.body.username && req.body.password == admin.password) {
+        const token = jwt.sign({ username: req.body.username }, sercret, { algorithm: "HS256", expiresIn: "30d" })
         res.cookie("token", token, {
-            maxAge: 24 * 60 * 60 * 1000, // 1 天（毫秒）
+            maxAge: 2592000000, // 一个月
             httpOnly: true,              // 禁止 JS 访问（防 XSS）
-            secure: true,                // 仅 HTTPS 传输
+            secure: false,                // 仅 HTTPS 传输
             sameSite: "strict",          // 防 CSRF
             path: "/",                   // Cookie 生效路径
         });
@@ -96,6 +105,7 @@ app.post("/login", upload.none(), (req, res) => {
         res.json(createResponse(-1, "error", "密码错误"))
     }
 })
+
 //登录前自动验证
 app.post("/login_verify", (req, res) => {
     jwt.verify(req.cookies.token, sercret, (err, decoded) => {
@@ -104,15 +114,18 @@ app.post("/login_verify", (req, res) => {
         }
     })
 })
+
 //退出登录
 app.get("/login_out", (req, res) => {
-    res.clearCookie("token", { httpOnly: true, secure: true, sameSite: "strict", path: "/", })
+    res.clearCookie("token", { httpOnly: true, secure: false, sameSite: "strict", path: "/", })
     res.json(createResponse(0, "success", "退出成功"))
 })
+
 //获取歌曲列表
 app.get("/get_songs", (req, res) => {
     res.json(data)
 })
+
 //添加新歌
 app.post("/add_song", upload.fields([
     { name: 'image', maxCount: 1 },  // 专辑封面（单文件）
@@ -123,7 +136,7 @@ app.post("/add_song", upload.fields([
         [new_id]: {
             name: req.body.name,
             time: req.body.time,
-            path: req.files['music'][0].originalname,
+            path: req.body.musicname ? req.body.musicname : req.files['music'][0].originalname,
             album: req.files['image'][0].originalname,
             songer: req.body.songer,
             lrc: req.body.lrc,
@@ -133,6 +146,7 @@ app.post("/add_song", upload.fields([
     fs.writeFileSync("./data.json", JSON.stringify(data))
     res.json(createResponse(0, "success", "上传成功"))
 })
+
 //更新
 app.post("/update_song_info", upload.fields([
     { name: 'image', maxCount: 1 },  // 专辑封面（单文件）
@@ -140,12 +154,32 @@ app.post("/update_song_info", upload.fields([
 ]), (req, res) => {
     res.json(createResponse(0, "success", "更新文件成功"))
 })
+
 //更新json信息
 app.post("/update_song", express.json(), (req, res) => {
     data = req.body
     fs.writeFileSync("./data.json", JSON.stringify(req.body))
     res.json(createResponse(0, "success", "更新成功"))
 })
+
+//大文件上传接口
+app.post('/upload_large_file', upload.single('music'), (req, res) => {
+    res.json(createResponse(0, "success", "接受成功"))
+})
+
+//合并分片接口
+app.post('/merge_large_file', (req, res) => {
+    const uploadPath = './uploads'
+    let files = fs.readdirSync(path.join(process.cwd(), uploadPath))
+    files = files.sort((a, b) => a.split('-')[0] - b.split('-')[0])
+    const writePath = path.join(process.cwd(), `public/music`, req.body.fileName)
+    files.forEach(item => {
+        fs.appendFileSync(writePath, fs.readFileSync(path.join(process.cwd(), uploadPath, item)))
+        fs.unlinkSync(path.join(process.cwd(), uploadPath, item))
+    })
+    res.json(createResponse(0, "success", "合并成功"))
+})
+
 //未找到资源返回404
 app.use((req, res) => {
     res.status(404).send("<h1>访问错误</h1>")
