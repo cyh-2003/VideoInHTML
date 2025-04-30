@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url"
 import path from "node:path"
 import jwt from "jsonwebtoken"
 
-const sercret = "shubaobao"
+const secret = "shubaobao"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
@@ -31,7 +31,7 @@ const upload = multer({
             } else {
                 cb(null, file.originalname)
             }
-        }
+        },
     })
 })
 
@@ -52,9 +52,9 @@ app.use(cookieParser())
 
 /**
  * 返回一个信息json
- * @param {number} code 
- * @param {string} message 
- * @param {string} dataMsg 
+ * @param {number} code
+ * @param {string} message
+ * @param {string} dataMsg
  * @returns {JSON}
  */
 function createResponse(code, message, dataMsg, redirect, token) {
@@ -71,7 +71,7 @@ function createResponse(code, message, dataMsg, redirect, token) {
 
 //管理路由
 app.get("/admin", (req, res) => {
-    jwt.verify(req.cookies.token, sercret, (err, decoded) => {
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
         if (err) {
             res.redirect("/login")
         } else {
@@ -88,7 +88,7 @@ app.get("/login", (req, res) => {
 //登录
 app.post("/login", upload.none(), (req, res) => {
     if (req.body.username == req.body.username && req.body.password == admin.password) {
-        const token = jwt.sign({ username: req.body.username }, sercret, { algorithm: "HS256", expiresIn: "30d" })
+        const token = jwt.sign({ username: req.body.username }, secret, { algorithm: "HS256", expiresIn: "30d" })
         res.cookie("token", token, {
             maxAge: 2592000000, // 一个月
             httpOnly: true,              // 禁止 JS 访问（防 XSS）
@@ -108,7 +108,7 @@ app.post("/login", upload.none(), (req, res) => {
 
 //登录前自动验证
 app.post("/login_verify", (req, res) => {
-    jwt.verify(req.cookies.token, sercret, (err, decoded) => {
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
         if (decoded) {
             res.json(createResponse(0, "success", "登录成功", "/admin"))
         }
@@ -131,20 +131,26 @@ app.post("/add_song", upload.fields([
     { name: 'image', maxCount: 1 },  // 专辑封面（单文件）
     { name: 'music', maxCount: 1 }   // 歌曲（单文件）
 ]), (req, res) => {
-    let new_id = Object.keys(data).filter(key => !isNaN(key)).length + 1
-    let new_data = {
-        [new_id]: {
-            name: req.body.name,
-            time: req.body.time,
-            path: req.body.musicname ? req.body.musicname : req.files['music'][0].originalname,
-            album: req.files['image'][0].originalname,
-            songer: req.body.songer,
-            lrc: req.body.lrc,
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
+        if (err) {
+            res.json(createResponse(-1, "error", "验证失败"))
+        } else {
+            let new_id = Object.keys(data).filter(key => !isNaN(key)).length + 1
+            let new_data = {
+                [new_id]: {
+                    name: req.body.name,
+                    time: req.body.time,
+                    path: req.body.musicname ? req.body.musicname : req.files['music'][0].originalname,
+                    album: req.files['image'][0].originalname,
+                    singer: req.body.singer,
+                    lrc: req.body.lrc,
+                }
+            }
+            data = { ...data, ...new_data }
+            fs.writeFileSync("./data.json", JSON.stringify(data))
+            res.json(createResponse(0, "success", "上传成功"))
         }
-    }
-    data = { ...data, ...new_data }
-    fs.writeFileSync("./data.json", JSON.stringify(data))
-    res.json(createResponse(0, "success", "上传成功"))
+    })
 })
 
 //更新
@@ -152,32 +158,56 @@ app.post("/update_song_info", upload.fields([
     { name: 'image', maxCount: 1 },  // 专辑封面（单文件）
     { name: 'music', maxCount: 1 }   // 歌曲（单文件）
 ]), (req, res) => {
-    res.json(createResponse(0, "success", "更新文件成功"))
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
+        if (err) {
+            res.json(createResponse(-1, "error", "验证失败"))
+        } else {
+            res.json(createResponse(0, "success", "更新文件成功"))
+        }
+    })
 })
 
 //更新json信息
 app.post("/update_song", express.json(), (req, res) => {
-    data = req.body
-    fs.writeFileSync("./data.json", JSON.stringify(req.body))
-    res.json(createResponse(0, "success", "更新成功"))
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
+        if (err) {
+            res.json(createResponse(-1, "error", "验证失败"))
+        } else {
+            data = req.body
+            fs.writeFileSync("./data.json", JSON.stringify(req.body))
+            res.json(createResponse(0, "success", "更新成功"))
+        }
+    })
 })
 
 //大文件上传接口
 app.post('/upload_large_file', upload.single('music'), (req, res) => {
-    res.json(createResponse(0, "success", "接受成功"))
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
+        if (err) {
+            res.json(createResponse(-1, "error", "验证失败"))
+        } else {
+            res.json(createResponse(0, "success", "接受成功"))
+        }
+    })
 })
 
 //合并分片接口
 app.post('/merge_large_file', (req, res) => {
-    const uploadPath = './uploads'
-    let files = fs.readdirSync(path.join(process.cwd(), uploadPath))
-    files = files.sort((a, b) => a.split('-')[0] - b.split('-')[0])
-    const writePath = path.join(process.cwd(), `public/music`, req.body.fileName)
-    files.forEach(item => {
-        fs.appendFileSync(writePath, fs.readFileSync(path.join(process.cwd(), uploadPath, item)))
-        fs.unlinkSync(path.join(process.cwd(), uploadPath, item))
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
+        if (err) {
+            res.json(createResponse(-1, "error", "验证失败"))
+        } else {
+            const uploadPath = './uploads'
+            let files = fs.readdirSync(path.join(process.cwd(), uploadPath))
+            files = files.sort((a, b) => a.split('-')[0] - b.split('-')[0])
+            const writePath = path.join(process.cwd(), `public/music`, req.body.fileName)
+            files.forEach(item => {
+                fs.appendFileSync(writePath, fs.readFileSync(path.join(process.cwd(), uploadPath, item)))
+                fs.unlinkSync(path.join(process.cwd(), uploadPath, item))
+            })
+            res.json(createResponse(0, "success", "合并成功"))
+        }
     })
-    res.json(createResponse(0, "success", "合并成功"))
 })
 
 //未找到资源返回404

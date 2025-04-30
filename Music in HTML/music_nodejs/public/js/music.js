@@ -8,7 +8,7 @@ fetch('/get_songs').then(res => res.json()).then(data => {
             <div class="change">${music_resource[i].name}</div>
             <div class="change play_icon" onclick="change(${i})"></div>
         </div>
-        <div class="light">${music_resource[i].songer}</div>
+        <div class="light">${music_resource[i].singer}</div>
         <div class="light">${music_resource[i].time}</div>
     `)
     }
@@ -143,7 +143,7 @@ function change(num) {
     id = num
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata.title = music_resource[id].name
-        navigator.mediaSession.metadata.artist = music_resource[id].songer
+        navigator.mediaSession.metadata.artist = music_resource[id].singer
         navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + music_resource[id].album, sizes: '300x300', type: 'image/webp' },]
     }
     //歌词逻辑
@@ -188,7 +188,7 @@ function change(num) {
     song_img.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
     document.body.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
     song_name.innerText = "歌曲名：" + music_resource[num].name
-    songer.innerText = "歌手：" + music_resource[num].songer
+    singer.innerText = "歌手：" + music_resource[num].singer
 }
 //确保获得音乐的时长
 music.addEventListener('loadedmetadata', () => {
@@ -350,4 +350,8 @@ music.addEventListener('timeupdate', () => {
         if (on) on.classList.remove('on')
         song_lrc.children[index].classList.add('on')
     }
+})
+
+document.querySelector('a').addEventListener('click', () => {
+    window.open('/login', 'login')
 })

@@ -122,15 +122,15 @@ li span {
 
 #main_upload {
     display: flex;
-    flex-direction: column
+    flex-direction: column;
 }
 
 #dialog_time,
-#dialog_songer,
+#dialog_singer,
 #dialog_name,
 textarea,
 #name,
-#songer,
+#singer,
 #time {
     width: 200px;
     height: 30px;
@@ -142,9 +142,9 @@ textarea,
 #dialog_name:active,
 #dialog_name:focus,
 #dialog_name:hover,
-#dialog_songer:active,
-#dialog_songer:focus,
-#dialog_songer:hover,
+#dialog_singer:active,
+#dialog_singer:focus,
+#dialog_singer:hover,
 #dialog_time:active,
 #dialog_time:focus,
 #dialog_time:hover,
@@ -154,9 +154,9 @@ textarea:hover,
 #time:hover,
 #time:active,
 #time:focus,
-#songer:hover,
-#songer:active,
-#songer:focus,
+#singer:hover,
+#singer:active,
+#singer:focus,
 #name:hover,
 #name:active,
 #name:focus {
@@ -169,7 +169,7 @@ textarea:hover,
     margin-right: 50px;
 }
 
-#songer {
+#singer {
     margin-left: 50px;
 }
 
@@ -209,6 +209,8 @@ textarea:hover,
     cursor: pointer;
 }
 
+#dia_music,
+#dia_img,
 textarea,
 #div_img,
 #div_music {
@@ -224,7 +226,7 @@ textarea,
     justify-content: center;
 }
 
-
+#dia_img:hover,
 #lrc:hover,
 #div_img:hover,
 #div_music:hover {
@@ -264,10 +266,45 @@ textarea,
     border-radius: 5px;
     padding-left: 10px;
     transition: right 0.5s ease-in-out;
+    color: white;
 }
 
-#msg.show {
-    right: 0;
+.msg {
+    z-index: 1;
+    width: 100px;
+    height: 50px;
+    right: -110px;
+    top: 50px;
+    position: fixed;
+    background-color: #3d92ca;
+    line-height: 50px;
+    border-radius: 5px;
+    padding-left: 10px;
+    animation: show 1.5s ease-in-out;
+    color: white;
+}
+
+@keyframes show {
+    50% {
+        transform: translateX(-110px);
+    }
+
+    100% {
+        transform: translateX(0);
+    }
+}
+
+#dialog_div_lrc {
+    position: absolute;
+    left: 36%;
+    top: 0;
+}
+
+.dialog_button {
+    width: 100%;
+    display: flex;
+    position: absolute;
+    bottom: 5%;
 }
 
 #dialog_music_name,
@@ -342,7 +379,7 @@ dialog div {
     margin: 10px;
 }
 
-#dialog_songer,
+#dialog_singer,
 #dialog_name {
     margin-left: 40px;
 }

@@ -115,7 +115,6 @@
                     location.href = data.data.redirect
                 }
             })
-
         document.querySelector("form").addEventListener("submit", (e) => {
             const formData = new FormData(e.target)
             fetch("/login", {

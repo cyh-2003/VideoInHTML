@@ -22,7 +22,7 @@ function main_admin_new() {
         main_admin.insertAdjacentHTML('beforeend', `
         <div class="admin_border">${i}</div>
         <div class="admin_border">${music_data[i].name}</div>
-        <div class="admin_border">${music_data[i].songer}</div>
+        <div class="admin_border">${music_data[i].singer}</div>
         <div class="admin_border">${music_data[i].time}</div>
         <div class="admin_border"><img src="/images/album/${music_data[i].album}"></div>
         <div class="admin_border">
@@ -103,7 +103,7 @@ function edit(id) {
     dia_id = id
     dia.showModal()
     dialog_time.value = music_data[id].time
-    dialog_songer.value = music_data[id].songer
+    dialog_singer.value = music_data[id].singer
     dialog_name.value = music_data[id].name
     dialog_music_name.innerText = music_data[id].path
     dialog_preview.src = `images/album/${music_data[id].album}`
@@ -117,7 +117,7 @@ upload.addEventListener('click', function () {
     main_upload.style.display = "flex"
     main_admin.style.display = "none"
     this.style.backgroundColor = "#daeafe"
-    same(100)
+    same(85)
 })
 
 function same(padding) {
@@ -157,7 +157,7 @@ submit.addEventListener('click', () => {
         time: dialog_time.value,
         path: dialog_music_name.innerText,
         album: dialog_file.files[0]?.name ?? music_data[dia_id].album,
-        songer: dialog_songer.value,
+        singer: dialog_singer.value,
         lrc: dialog_lrc.value
     }
     admin_fetch('/update_song', JSON.stringify(music_data))
@@ -205,13 +205,7 @@ dia_form.addEventListener('submit', (e) => {
 //退出登录
 login_out.addEventListener('click', () => {
     fetch("/login_out").then(res => res.json()).then((data) => {
-        msg.style.color = "white"
-        msg.innerText = data.data.msg
-        msg.classList.add('show')
-        setTimeout(() => {
-            msg.classList.remove('show')
-            location.href = "/login"
-        }, 600)
+        msg(data.data.msg, () => { location.href = "/login" })
     })
 })
 
@@ -231,17 +225,11 @@ function admin_fetch(url, data) {
         }
     }
     fetch(url, config).then(res => res.json()).then(data => {
-        if (data.code != 0) {
-            msg.style.color = "red"
-        } else {
-            msg.style.color = "white"
-        }
-        msg.innerText = data.data.msg
-        msg.classList.add('show')
-        main_admin_new()
-        setTimeout(() => {
-            msg.classList.remove('show')
-        }, 700)
+        msg(data.data.msg, () => {
+            fetch('/get_songs').then(res => res.json()).then(data => {
+                music_data = data
+            })
+        }, main_admin_new)
     })
 }
 
@@ -276,14 +264,25 @@ const uploadFile = (chunks) => {
                 fileName: music_file_name
             })
         }).then(res => res.json()).then(data => {
-            msg.innerText = data.data.msg
-            msg.classList.add('show')
-            setTimeout(() => {
-                msg.classList.remove('show')
-                fetch('/get_songs').then(res => res.json()).then(data => {
-                    music_data = data
-                })
-            }, 700)
+            msg(data.data.msg)
         })
     })
+}
+
+/**
+ * 展示消息
+ * @param {String} msg 消息
+ * @param {function} code 回调函数,拓展代码
+ * @param {function} code2 回调函数,拓展代码
+ */
+function msg(msg, code = () => { }, code2 = () => { }) {
+    const div = document.createElement('div')
+    div.className = 'msg'
+    div.innerText = msg
+    document.body.appendChild(div)
+    code2()
+    setTimeout(() => {
+        div.remove()
+        code()
+    }, 1500)
 }

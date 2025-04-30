@@ -38,6 +38,7 @@ svg {
   color: white;
   text-decoration: none;
   font-size: 40px;
+  cursor: pointer;
 }
 
 
@@ -345,7 +346,7 @@ body {
   margin-top: 200px;
 }
 
-#songer {
+#singer {
   position: absolute;
   top: 1%;
   left: 50%;
