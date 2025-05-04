@@ -1,9 +1,14 @@
 const { app, BrowserWindow, Notification, Menu, Tray } = require('electron')
 const path = require('path')
+const net = require('net')
 
-let old_text = ''//随便一个字符串
-var timer = 6000
 let tray = null
+
+const client = new net.Socket()
+// 创建 TCP 客户端
+client.connect(80, '127.0.0.1', () => {
+    client.write('lbwnb') // 发送数据
+})
 
 // if (app.isPackaged) {
 //     app.setLoginItemSettings({
@@ -12,12 +17,12 @@ let tray = null
 //     })
 // }
 
-function createWindow(user, msg) {
+function createWindow(user, msg = '') {
     const win = new BrowserWindow({
         width: 800,
         height: 600,
         autoHideMenuBar: true,
-        icon: path.join(__dirname, './wechat.png'),
+        icon: path.join(__dirname, './src/public/wechat.png'),
         webPreferences: {
             preload: path.resolve(__dirname, './preload.js')
         }
@@ -36,7 +41,8 @@ function createWindow(user, msg) {
     const contextMenu = Menu.buildFromTemplate([
         {
             label: '退出', click: () => {
-                win.destroy()
+                client.end()
+                if (win) win.destroy()
                 app.exit()
             }
         },
@@ -44,33 +50,33 @@ function createWindow(user, msg) {
     tray.setToolTip('自动获取消息')
     tray.setContextMenu(contextMenu)
 }
-//异步:用于获取新消息
-async function new_text() {
-    let response = await fetch('http://127.0.0.1/wechat', {//自己补充api接口
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'user':'lbwnb'
-        },
-    })
-    return await response.json()
-}
-//查看有没有新消息逻辑
-async function check_new_text() {
-    const result = await new_text()
-    if (result.msg !== old_text) {
-        old_text = result.msg
+
+client.on('error', (err) => {
+    if (app.isReady()) createWindow('连接失败', err.code)
+})
+
+app.on('ready', () => {
+    createWindow('启动')
+})
+
+client.on('close', () => {
+    setTimeout(() => client.connect(80, '127.0.0.1', () => {
+        client.write('lbwnb')
+    }), 3000)
+})
+
+var temp = null
+
+client.on('data', (data) => {
+    if (temp != data.toString()) {
+        temp = data.toString()
+        let result = JSON.parse(data)
+        let lines = result.msg.split('\n')
+        if (app.isReady()) createWindow(lines[2], lines[1])
         new Notification({
             title: '微信新消息', body: `
-        ${result.user}
-${result.msg}`
+            ${lines[2]}
+        ${lines[1]}`
         }).show()
-        createWindow(result.user, result.msg)
-        timer = 500
-    } else {
-        timer = 6000
     }
-    setTimeout(check_new_text, timer)
-}
-
-check_new_text()
+})

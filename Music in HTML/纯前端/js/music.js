@@ -176,7 +176,6 @@ function change(num) {
         song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
     }
     song_list_dom(num, true)
-    music.pause()
     music.src = "./music/" + music_resource[num].path
     player_music_info.innerText = music_resource[num].name
     music.play()

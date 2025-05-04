@@ -12,6 +12,10 @@ const secret = "shubaobao"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+//login使用变量
+let user = {}
+let bool = true //避免多次执行setTimeout
+
 const admin = JSON.parse(fs.readFileSync("./admin.json", "utf-8"))
 const app = express()
 const upload = multer({
@@ -87,7 +91,20 @@ app.get("/login", (req, res) => {
 
 //登录
 app.post("/login", upload.none(), (req, res) => {
-    if (req.body.username == req.body.username && req.body.password == admin.password) {
+    if (!user[req.ip]) {
+        user = { ...user, [req.ip]: 0 }
+    }
+
+    if (user[req.ip] >= 5) {
+        res.json(createResponse(-1, "login_fail", "失败次数过多"))
+        if (bool) {
+            bool = false
+            setTimeout(() => {
+                user[req.ip] = 0
+                bool = true
+            }, 600000)
+        }
+    } else if (req.body.username === req.body.username && req.body.password === admin.password) {
         const token = jwt.sign({ username: req.body.username }, secret, { algorithm: "HS256", expiresIn: "30d" })
         res.cookie("token", token, {
             maxAge: 2592000000, // 一个月
@@ -99,10 +116,13 @@ app.post("/login", upload.none(), (req, res) => {
         res.json(createResponse(0, "success", "登录成功", "/admin"))
     } else if (req.body.username !== admin.username && req.body.password !== admin.password) {
         res.json(createResponse(-1, "error", "用户名和密码错误"))
+        user[req.ip]++
     } else if (req.body.username !== admin.username) {
         res.json(createResponse(-1, "error", "用户名错误"))
+        user[req.ip]++
     } else {
         res.json(createResponse(-1, "error", "密码错误"))
+        user[req.ip]++
     }
 })
 

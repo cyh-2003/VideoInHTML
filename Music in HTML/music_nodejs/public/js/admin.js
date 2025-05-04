@@ -56,8 +56,21 @@ admin.addEventListener('click', function () {
     main_admin.style.display = "grid"
     this.style.backgroundColor = "#daeafe"
     upload.style.backgroundColor = ""
-    same(20)
+    main.style.padding = "30px"
+    document.getElementsByClassName('weclcome')[0].style.display = 'none'
+    main.style.display = 'block'
     main_admin_new()
+})
+
+//侧边栏切换上传
+upload.addEventListener('click', function () {
+    admin.style.backgroundColor = ""
+    main_upload.style.display = "flex"
+    main_admin.style.display = "none"
+    this.style.backgroundColor = "#daeafe"
+    main.style.padding = `85px 0 0 85px`
+    document.getElementsByClassName('weclcome')[0].style.display = 'none'
+    main.style.display = 'block'
 })
 
 //上移
@@ -109,21 +122,6 @@ function edit(id) {
     dialog_preview.src = `images/album/${music_data[id].album}`
     dialog_preview.style.display = 'block'
     dialog_lrc.value = music_data[id].lrc
-}
-
-//侧边栏切换上传
-upload.addEventListener('click', function () {
-    admin.style.backgroundColor = ""
-    main_upload.style.display = "flex"
-    main_admin.style.display = "none"
-    this.style.backgroundColor = "#daeafe"
-    same(85)
-})
-
-function same(padding) {
-    document.getElementsByClassName('weclcome')[0].style.display = 'none'
-    main.style.display = 'block'
-    main.style.padding = `${padding}px`
 }
 
 dialog_file.addEventListener('change', (e) => {
@@ -243,6 +241,7 @@ const chunkFun = (file, size = 5242880) => {
 }
 
 //大文件分片上传
+
 const uploadFile = (chunks) => {
     const List = []
     for (let i = 0; i < chunks.length; i++) {
@@ -256,6 +255,7 @@ const uploadFile = (chunks) => {
             body: formData
         }))
     }
+
     Promise.all(List).then(res => {
         fetch('/merge_large_file', {
             method: 'POST',
