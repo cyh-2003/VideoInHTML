@@ -139,6 +139,9 @@ textarea,
     padding: 0 5px 0 5px;
 }
 
+.content[over],
+#dia_music:active,
+#dia_music:hover,
 #dialog_name:active,
 #dialog_name:focus,
 #dialog_name:hover,
@@ -160,8 +163,8 @@ textarea:hover,
 #name:hover,
 #name:active,
 #name:focus {
-    border-color: #00a1d6;
-    outline: none;
+    border-color: #00a1d6 !important;
+    outline: none !important;
 }
 
 

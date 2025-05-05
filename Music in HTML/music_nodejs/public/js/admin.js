@@ -62,6 +62,18 @@ admin.addEventListener('click', function () {
     main_admin_new()
 })
 
+var lastDrop = null;
+document.addEventListener('dragenter', function (ev) {
+    if (lastDrop) {
+        lastDrop.toggleAttribute('over', false);
+    }
+    const dropbox = ev.target.closest('[allowdrop]'); // 获取最近的放置目标
+    if (dropbox) {
+        dropbox.toggleAttribute('over', true);
+        lastDrop = dropbox;
+    }
+})
+
 //侧边栏切换上传
 upload.addEventListener('click', function () {
     admin.style.backgroundColor = ""
