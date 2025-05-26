@@ -62,15 +62,16 @@ admin.addEventListener('click', function () {
     main_admin_new()
 })
 
-var lastDrop = null;
+//拖拽样式
+var lastDrop = null
 document.addEventListener('dragenter', function (ev) {
     if (lastDrop) {
-        lastDrop.toggleAttribute('over', false);
+        lastDrop.toggleAttribute('over', false)
     }
-    const dropbox = ev.target.closest('[allowdrop]'); // 获取最近的放置目标
+    const dropbox = ev.target.closest('[allowdrop]') // 获取最近的放置目标
     if (dropbox) {
-        dropbox.toggleAttribute('over', true);
-        lastDrop = dropbox;
+        dropbox.toggleAttribute('over', true)
+        lastDrop = dropbox
     }
 })
 

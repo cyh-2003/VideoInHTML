@@ -369,7 +369,6 @@ body {
   position: absolute;
   top: 4px;
   height: 15px;
-  opacity: 0;
 }
 
 #voice_click {
@@ -478,8 +477,7 @@ body {
   }
 
   #player_voice {
-    left: 999%;
-    opacity: 0;
+    visibility: hidden;
   }
 
   #main {

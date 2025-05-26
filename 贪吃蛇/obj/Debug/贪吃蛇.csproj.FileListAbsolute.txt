@@ -9,3 +9,7 @@ F:\code\VideoInHTML\贪吃蛇\obj\Debug\贪吃蛇.csproj.AssemblyReference.cache
 F:\code\VideoInHTML\贪吃蛇\obj\Debug\贪吃蛇.csproj.CoreCompileInputs.cache
 F:\code\VideoInHTML\贪吃蛇\obj\Debug\贪吃蛇.exe
 F:\code\VideoInHTML\贪吃蛇\obj\Debug\贪吃蛇.pdb
+F:\code\VideoInHTML\贪吃蛇\obj\Debug\贪吃蛇.exe.config
+F:\code\VideoInHTML\贪吃蛇\bin\Debug\贪吃蛇.exe.config
+F:\code\VideoInHTML\贪吃蛇\bin\Debug\贪吃蛇.exe
+F:\code\VideoInHTML\贪吃蛇\bin\Debug\贪吃蛇.pdb

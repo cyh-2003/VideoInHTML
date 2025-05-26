@@ -42,7 +42,6 @@ btn_play.addEventListener("click", () => {
 })
 //处理播放是否暂停/继续
 function play() {
-    //music.pause()
     if (btn_play.className == "") {
         if (music.src == "") change(id)
         music.play()
@@ -74,11 +73,7 @@ const update = () => {
 function player_progress(event, width) {
     player_progress_dot.style.left = width + 'px'
     player_progress_played.style.width = width + "px"
-    if (window.screen.width > 500) {
-        player_music_time.innerText = formatTime(music.currentTime) + " / " + formatTime(music_time)
-    } else {
-        player_music_time.innerHTML = formatTime(music.currentTime) + "&nbsp;".repeat(85) + formatTime(music_time)
-    }
+    player_music_time.innerText = formatTime(music.currentTime) + " / " + formatTime(music_time)
 }
 //歌曲进度条点击
 player_progress_click.addEventListener("click", (event) => {
@@ -148,13 +143,10 @@ function change(num) {
     }
     //歌词逻辑
     //歌词解析
-    let binaryString = atob(music_resource[num].lrc)
-    let uint8Array = new Uint8Array(binaryString.length)
-    for (let i = 0; i < binaryString.length; i++) {
-        uint8Array[i] = binaryString.charCodeAt(i)
-    }
-    result = decoder.decode(uint8Array).split('\n')
     //decodeURIComponent(escape(atob(music_resource[1].lrc)))
+    result = new TextDecoder().decode(
+        Uint8Array.from(atob(music_resource[num].lrc), c => c.charCodeAt(0))
+    ).split('\n')
 
     //歌词显示(dom)
     song_lrc.innerHTML = ''
@@ -285,7 +277,6 @@ music.onended = () => {
     }
 }
 //实现移动按钮改变音乐播放位置
-let newX
 player_progress_dot.onmousedown = (event) => {
     dot_move(event, player_progress_dot, player_progress_inner, player_progress_played, true)
 }

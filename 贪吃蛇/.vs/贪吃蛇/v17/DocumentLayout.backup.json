@@ -3,12 +3,8 @@
   "WorkspaceRootPath": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{9B0E457A-20C9-4ABE-B073-D7EA5FED6C16}|\u8D2A\u5403\u86C7.csproj|f:\\code\\videoinhtml\\\u8D2A\u5403\u86C7\\app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}",
-      "RelativeMoniker": "D:0:0:{9B0E457A-20C9-4ABE-B073-D7EA5FED6C16}|\u8D2A\u5403\u86C7.csproj|solutionrelative:app.config||{FA3CD31E-987B-443A-9B81-186104E8DAC1}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{9B0E457A-20C9-4ABE-B073-D7EA5FED6C16}|\u8D2A\u5403\u86C7.csproj|f:\\code\\videoinhtml\\\u8D2A\u5403\u86C7\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{9B0E457A-20C9-4ABE-B073-D7EA5FED6C16}|\u8D2A\u5403\u86C7.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9B0E457A-20C9-4ABE-B073-D7EA5FED6C16}|\u8D2A\u5403\u86C7.csproj|f:\\code\\videoinhtml\\\u8D2A\u5403\u86C7\\game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9B0E457A-20C9-4ABE-B073-D7EA5FED6C16}|\u8D2A\u5403\u86C7.csproj|solutionrelative:game.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -23,14 +19,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "App.config",
-              "DocumentMoniker": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\App.config",
-              "RelativeDocumentMoniker": "App.config",
-              "ToolTip": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\App.config",
-              "RelativeToolTip": "App.config",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAnAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000601|",
-              "WhenOpened": "2025-03-06T17:31:42.986Z",
+              "Title": "Game.cs",
+              "DocumentMoniker": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\Game.cs",
+              "RelativeDocumentMoniker": "Game.cs",
+              "ToolTip": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\Game.cs",
+              "RelativeToolTip": "Game.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-14T13:50:35.559Z",
               "EditorCaption": ""
             },
             {
@@ -48,19 +44,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "F:\\code\\VideoInHTML\\\u8D2A\u5403\u86C7\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAFAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-03-03T05:42:15.568Z",
-              "EditorCaption": ""
             }
           ]
         }
