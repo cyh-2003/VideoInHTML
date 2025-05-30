@@ -190,8 +190,9 @@ upload_form.addEventListener("submit", (e) => {
         formData.delete('music')
         music_file_name = music.files[0].name
         formData.append('musicname', music_file_name)
-        const chunks = chunkFun(music.files[0])
-        uploadFile(chunks)
+        xhr(music.files[0])
+        //const chunks = chunkFun(music.files[0])
+        //uploadFile(chunks)
     }
     admin_fetch('/add_song', formData)
     upload_form.reset()
@@ -206,8 +207,9 @@ dia_form.addEventListener('submit', (e) => {
         if (dialog_music.files[0].size > 5242880) {
             formData.delete('music')
             music_file_name = dialog_music.files[0].name
-            const chunks = chunkFun(dialog_music.files[0])
-            uploadFile(chunks)
+            xhr(dialog_music.files[0])
+            //const chunks = chunkFun(dialog_music.files[0])
+            //uploadFile(chunks)
         }
     }
     admin_fetch('/update_song_info', formData)
@@ -254,7 +256,6 @@ const chunkFun = (file, size = 5242880) => {
 }
 
 //大文件分片上传
-
 const uploadFile = (chunks) => {
     const List = []
     for (let i = 0; i < chunks.length; i++) {
@@ -282,6 +283,7 @@ const uploadFile = (chunks) => {
     })
 }
 
+
 /**
  * 展示消息
  * @param {String} msg 消息
@@ -298,4 +300,23 @@ function msg(msg, code = () => { }, code2 = () => { }) {
         div.remove()
         code()
     }, 1500)
+}
+
+// 定义一个函数xhr，接收一个参数params
+function xhr(data) {
+    const file = new FormData()
+    file.append('music', data)
+    return new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.addEventListener('readystatechange', () => {
+            if (xhr.readyState === xhr.DONE) {
+                resolve(xhr.responseText)
+            }
+        })
+        xhr.addEventListener('progress', (event) => {
+            console.log(event.loaded, event.total)
+        })
+        xhr.open('POST', '/upload_large_single_file')
+        xhr.send(file)
+    })
 }

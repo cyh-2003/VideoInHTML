@@ -200,7 +200,18 @@ app.post("/update_song", express.json(), (req, res) => {
     })
 })
 
-//大文件上传接口
+//大文件上传接口(不分片)
+app.post('/upload_large_single_file', upload.single('music'), (req, res) => {
+    jwt.verify(req.cookies.token, secret, (err, decoded) => {
+        if (err) {
+            res.json(createResponse(-1, "error", "验证失败"))
+        } else {
+            res.json(createResponse(0, "success", "接受成功"))
+        }
+    })
+})
+
+//大文件上传接口(分片)
 app.post('/upload_large_file', upload.single('music'), (req, res) => {
     jwt.verify(req.cookies.token, secret, (err, decoded) => {
         if (err) {
