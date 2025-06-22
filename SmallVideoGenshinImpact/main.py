@@ -38,13 +38,12 @@ tab.Page.navigate(url=url)
 tab.wait(5)
 tab.Runtime.evaluate(expression="var video = document.querySelector('video')")
 
-
 def on_key_event(event):
     if event.name == "left":
         tab.Runtime.evaluate(expression="video.currentTime -= 3")
     elif event.name == "right":
         tab.Runtime.evaluate(expression="video.currentTime += 3")
-    elif event.name == "r":
+    elif event.name == "t":
         tab.Runtime.evaluate(
             expression="video.paused === true ? video.play() : video.pause()"
         )

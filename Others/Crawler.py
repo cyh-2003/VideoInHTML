@@ -49,6 +49,7 @@ def main(url: str, UserAgent: str = PC):
             "freeanywhere",
             "下次",
             "下星期",
+            "非STEAM",
         ]  # 用于排除的
         keywordTwo = [
             "免费",

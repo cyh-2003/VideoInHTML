@@ -104,7 +104,7 @@ app.post("/login", upload.none(), (req, res) => {
                 bool = true
             }, 600000)
         }
-    } else if (req.body.username === req.body.username && req.body.password === admin.password) {
+    } else if (req.body.username === admin.username && req.body.password === admin.password) {
         const token = jwt.sign({ username: req.body.username }, secret, { algorithm: "HS256", expiresIn: "30d" })
         res.cookie("token", token, {
             maxAge: 2592000000, // 一个月

@@ -1,3 +1,5 @@
+const channel = new BroadcastChannel('music_channel')
+const img = new Image()
 fetch('/get_songs').then(res => res.json()).then(data => {
     globalThis.music_resource = data
     //根据json数据动态插入
@@ -15,9 +17,7 @@ fetch('/get_songs').then(res => res.json()).then(data => {
     globalThis.songs_length = document.getElementsByClassName("id").length
 })
 
-const music = document.querySelector("audio")
-const decoder = new TextDecoder('utf-8')
-
+const music = new Audio()
 let requestID
 let music_time
 let id = 1
@@ -27,14 +27,48 @@ music.volume = .6
 let song_lrc_list = []
 let result
 let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?\]/
+//标签页通信,自动刷新
+channel.addEventListener('message', (event) => {
+    player__main.innerHTML = `<div class="light"></div>
+                <div class="light">歌曲</div>
+                <div class="light">歌手</div>
+                <div class="light">时长</div>`
+    fetch('/get_songs').then(res => res.json()).then(data => {
+        globalThis.music_resource = data
+        //根据json数据动态插入
+        for (let i in music_resource) {
+            player__main.insertAdjacentHTML('beforeend', `
+        <div class="light id" id="${i}">${i}</div>
+        <div>
+            <div class="change">${music_resource[i].name}</div>
+            <div class="change play_icon" onclick="change(${i})"></div>
+        </div>
+        <div class="light">${music_resource[i].singer}</div>
+        <div class="light">${music_resource[i].time}</div>
+    `)
+        }
+        globalThis.songs_length = document.getElementsByClassName("id").length
+        change(id)
+    })
+})
+
+//页面可见度API,可自行决定是否离开页面自动暂停
+/*
+window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === "hidden") {
+        cancelAnimationFrame(requestID)
+        music.pause()
+    }else {
+        music.play()
+    }
+})
+*/
 
 //格式化时间
-// 定义一个函数，用于格式化时间
 function formatTime(seconds) {
     let min = Math.floor(seconds / 60)
     let sec = Math.floor(seconds % 60)
     return (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec)
-
 }
 //按钮播放
 btn_play.addEventListener("click", () => {
@@ -141,6 +175,10 @@ function change(num) {
         navigator.mediaSession.metadata.artist = music_resource[id].singer
         navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + music_resource[id].album, sizes: '300x300', type: 'image/webp' },]
     }
+
+    img.src = "./images/album/" + music_resource[num].album
+
+
     //歌词逻辑
     //歌词解析
     //decodeURIComponent(escape(atob(music_resource[1].lrc)))
@@ -177,9 +215,43 @@ function change(num) {
     btn_play.className = "pause"
     update()
     song_img.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
-    document.body.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
+    bg.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
     song_name.innerText = "歌曲名：" + music_resource[num].name
     singer.innerText = "歌手：" + music_resource[num].singer
+
+    img.onload =  ()=> {
+        const canvas = document.createElement("canvas")
+        const ctx = canvas.getContext("2d")
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        ctx.drawImage(img, 0, 0)
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+        const pixelArray = []
+        for (let i = 0, offset, r, g, b, a; i < canvas.width*canvas.height; i = i + 20) {
+            offset = i * 4
+            r = data[offset]
+            g = data[offset + 1]
+            b = data[offset + 2]
+            a = data[offset + 3]
+
+            // 只提取非透明且不是白色的像素数据
+            if (typeof a === "undefined" || a >= 125) {
+                if (!(r > 250 && g > 250 && b > 250)) {
+                    pixelArray.push([r, g, b])
+                }
+            }
+        }
+        let r=0,g=0,b=0
+        for (let i = 0; i < pixelArray.length; i++) {
+            r += pixelArray[i][0]
+            g += pixelArray[i][1]
+            b += pixelArray[i][2]
+        }
+        r = Math.trunc(r / pixelArray.length)
+        g = Math.trunc(g / pixelArray.length)
+        b = Math.trunc(b / pixelArray.length)
+        document.body.style = `background:rgb(${r},${g},${b})`
+    }
 }
 //确保获得音乐的时长
 music.addEventListener('loadedmetadata', () => {

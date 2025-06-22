@@ -24,6 +24,7 @@ class music_player {
     #fixedBar
     #container
     #width
+    #auto_theme_color
     music  = new Audio()
     constructor(options) {
         this.#fixedBar = options.fixedBar ? options.fixedBar : false
@@ -42,6 +43,7 @@ class music_player {
         this.#default_theme_color = options.default_theme_color ? options.default_theme_color : '#000'
         this.#container = options.container
         this.#width = options.width ? options.width : '590px'
+        this.#auto_theme_color = options.auto_theme_color ? options.auto_theme_color : false
         this.#container.insertAdjacentHTML('beforeend',`
     <div class="player ${this.#fixed ? 'player_fixed': (this.#fixedBar ? 'player_fixedBar': undefined)}" style="width: ${this.#mini ? '66px':this.#width}">
         <div class="${this.#size == 'normal' ? '':'big'} main">
@@ -119,9 +121,23 @@ class music_player {
         this.music.src = './music/'+options.audio[0].path
         music_title.innerHTML = options.audio[0].name
         music_singer.innerHTML = '-&nbsp;'+ options.audio[0].singer
-        player_progress_played.style.background = options.audio[0].theme_color ? options.audio[0].theme_color : this.#default_theme_color
+
+/*        player_progress_played.style.background = options.audio[0].theme_color ? options.audio[0].theme_color : this.#default_theme_color
         player_progress_dot.style.background = options.audio[0].theme_color ? options.audio[0].theme_color : this.#default_theme_color
-        volume_bar_over.style.background = options.audio[0].theme_color ? options.audio[0].theme_color : this.#default_theme_color
+        volume_bar_over.style.background = options.audio[0].theme_color ? options.audio[0].theme_color : this.#default_theme_color*/
+
+
+        if (this.#music_data[0].theme_color){
+            this.#setProgressBarColors(options.audio[0].theme_color)
+        } else if (this.#auto_theme_color) {
+            this.#getMainImageColor().then(data=>{
+                this.#setProgressBarColors(data)
+            })
+        } else {
+            this.#setProgressBarColors(this.#default_theme_color)
+        }
+
+
         document.querySelectorAll('.list_cur')[0].style = `background:${options.audio[0].theme_color ? options.audio[0].theme_color : this.#default_theme_color};`
         document.querySelectorAll('.list_block')[0].classList.add('clicked')
 
@@ -436,9 +452,17 @@ class music_player {
             })
             document.querySelectorAll('.list_cur')[num].style = `background:${this.#music_data[num].theme_color};`
             document.querySelectorAll('.list_block')[num].classList.add('clicked')
-            player_progress_played.style.background = this.#music_data[num].theme_color ? this.#music_data[num].theme_color : this.#default_theme_color
-            player_progress_dot.style.background = this.#music_data[num].theme_color ? this.#music_data[num].theme_color : this.#default_theme_color
-            volume_bar_over.style.background = this.#music_data[num].theme_color ? this.#music_data[num].theme_color : this.#default_theme_color
+
+            if (this.#music_data[num].theme_color){
+                this.#setProgressBarColors(this.#music_data[num].theme_color)
+            } else if (this.#auto_theme_color) {
+                this.#getMainImageColor().then(data=>{
+                    this.#setProgressBarColors(data)
+                })
+            } else {
+                this.#setProgressBarColors(this.#default_theme_color)
+            }
+
             button_play.style.backgroundImage = 'url("../assets/pause_button.svg")'
             img_cover.style.backgroundImage = `url('../album/${this.#music_data[num].album}')`
             music_title.innerHTML = this.#music_data[num].name
@@ -516,4 +540,156 @@ class music_player {
         }
         return lyrics
     }
+
+    //提取主题色
+    #getMainImageColor() {
+        const img = new Image()
+        img.src = `./album/${this.#music_data[this.#id].album}`
+        return new Promise((resolve,reject)=>{
+        img.onload =  () =>{
+            const canvas = document.createElement("canvas")
+            const ctx = canvas.getContext("2d")
+            canvas.width = img.naturalWidth
+            canvas.height = img.naturalHeight
+            ctx.drawImage(img, 0, 0)
+            const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+            /* K-Means 算法
+            const centers = quantize(data, 5)
+            resolve(centers[1])*/
+            const pixelArray = []
+            for (let i = 0, offset, r, g, b, a; i < canvas.width*canvas.height; i = i + 20) {
+                offset = i * 4
+                r = data[offset]
+                g = data[offset + 1]
+                b = data[offset + 2]
+                a = data[offset + 3]
+
+                // 只提取非透明且不是白色的像素数据
+                if (typeof a === "undefined" || a >= 125) {
+                    if (!(r > 250 && g > 250 && b > 250)) {
+                        pixelArray.push([r, g, b])
+                    }
+                }
+            }
+            let r=0,g=0,b=0
+            for (let i = 0; i < pixelArray.length; i++) {
+                r += pixelArray[i][0]
+                g += pixelArray[i][1]
+                b += pixelArray[i][2]
+            }
+            r = Math.trunc(r / pixelArray.length)
+            g = Math.trunc(g / pixelArray.length)
+            b = Math.trunc(b / pixelArray.length)
+            resolve(`rgb(${r},${g},${b})`)
+        }
+    })
+    }
+
+    //设置进度条颜色
+    #setProgressBarColors(color) {
+        player_progress_played.style.background = color
+        player_progress_dot.style.background = color
+        volume_bar_over.style.background = color
+    }
 }
+
+/*
+K-Means 算法
+function quantize(data, k,frequency = 20) {
+    // 将颜色值转换为三维向量
+    const vectors = []
+    for (let i = 0; i < data.length; i += frequency) {
+        if (!(data[i] > 250 && data[i+1] > 250 && data[i+2] > 250)) {
+            vectors.push([data[i], data[i + 1], data[i + 2]])
+        }
+    }
+
+    // 随机选择 K 个聚类中心
+    const centers = []
+    for (let i = 0; i < k; i++) {
+        centers.push(vectors[Math.floor(Math.random() * vectors.length)])
+    }
+
+    // 迭代更新聚类中心
+    let iterations = 0
+    while (iterations < 90) {
+        // 分配数据点到最近的聚类中心所在的簇中
+        const clusters = new Array(k).fill().map(() => [])
+        for (let i = 0; i < vectors.length; i++) {
+            let minDist = Infinity
+            let minIndex = 0
+            for (let j = 0; j < centers.length; j++) {
+                const dist = distance(vectors[i], centers[j])
+                if (dist < minDist) {
+                    minDist = dist
+                    minIndex = j
+                }
+            }
+            clusters[minIndex].push(vectors[i])
+        }
+
+        // 更新聚类中心
+        let converged = true
+        for (let i = 0; i < centers.length; i++) {
+            const cluster = clusters[i]
+            if (cluster.length > 0) {
+                const newCenter = cluster
+                    .reduce((acc, cur) => [
+                        acc[0] + cur[0],
+                        acc[1] + cur[1],
+                        acc[2] + cur[2],
+                    ])
+                    .map((val) => val / cluster.length);
+                if (!equal(centers[i], newCenter)) {
+                    centers[i] = newCenter
+                    converged = false
+                }
+            }
+        }
+        if (converged) {
+            break
+        }
+        iterations++
+    }
+
+    // 将每个像素点的颜色值替换为所在簇的聚类中心的颜色值
+    for (let i = 0; i < data.length; i += frequency) {
+        const vector = [data[i], data[i + 1], data[i + 2]]
+        let minDist = Infinity
+        let minIndex = 0
+        for (let j = 0; j < centers.length; j++) {
+            const dist = distance(vector, centers[j])
+            if (dist < minDist) {
+                minDist = dist
+                minIndex = j
+            }
+        }
+        const center = centers[minIndex]
+        data[i] = center[0]
+        data[i + 1] = center[1]
+        data[i + 2] = center[2]
+    }
+
+    // 计算每个颜色值在图像中出现的次数，并按出现次数从大到小排序
+    const counts = {};
+    for (let i = 0; i < data.length; i += frequency) {
+        const color = `rgb(${data[i]}, ${data[i + 1]}, ${data[i + 2]})`
+        counts[color] = counts[color] ? counts[color] + 1 : 1
+    }
+    const sortedColors = Object.keys(counts).sort(
+        (a, b) => counts[b] - counts[a]
+    )
+
+    // 取前 k 个颜色作为主要颜色
+    return sortedColors.slice(0, k)
+}
+
+function distance(a, b) {
+    return Math.sqrt(
+        (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2
+    )
+}
+
+function equal(a, b) {
+    return a[0] === b[0] && a[1] === b[1] && a[2] === b[2]
+}*/

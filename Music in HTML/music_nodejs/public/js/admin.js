@@ -1,4 +1,5 @@
 const main = document.getElementsByClassName('main')[0]
+const channel = new BroadcastChannel('music_channel')
 globalThis.music_data
 globalThis.dia_id
 globalThis.music_file_name
@@ -232,7 +233,7 @@ function admin_fetch(url, data) {
         method: 'POST',
         body: data
     }
-    if (url == '/update_song') {
+    if (url === '/update_song') {
         config.headers = {
             'Content-Type': 'application/json'
         }
@@ -241,6 +242,7 @@ function admin_fetch(url, data) {
         msg(data.data.msg, () => {
             fetch('/get_songs').then(res => res.json()).then(data => {
                 music_data = data
+                channel.postMessage('new_music_data')
             })
         }, main_admin_new)
     })
