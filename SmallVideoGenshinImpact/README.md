@@ -22,5 +22,5 @@ json格式
 ```
 
 # 根据开源协议署名
-- BSD [pychrome]https://github.com/fate0/pychrome
-- MIT [keyboard]https://github.com/boppreh/keyboard
+- BSD [pychrome](https://github.com/fate0/pychrome)
+- MIT [keyboard](https://github.com/boppreh/keyboard)

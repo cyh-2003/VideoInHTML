@@ -2,6 +2,7 @@ import pychrome
 import keyboard
 import json
 import re
+import time
 
 # 打开并读取 JSON 文件
 with open("data.json", "r", encoding="gbk") as f:
@@ -31,12 +32,14 @@ try:
     tab = browser.new_tab()
 except Exception:
     print("请先打开浏览器")
+    time.sleep(3000)
     exit()
 tab.start()
 # 打开 Bilibili 视频页面
 tab.Page.navigate(url=url)
 tab.wait(5)
 tab.Runtime.evaluate(expression="var video = document.querySelector('video')")
+
 
 def on_key_event(event):
     if event.name == "left":

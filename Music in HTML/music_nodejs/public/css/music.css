@@ -534,11 +534,15 @@ html{
   }
 
   #song_lrc_info {
-    top: 15.5rem;
-    height: 17rem;
+    top: 14rem;
+    height: 13rem;
   }
 
   #song_info {
     top: 1rem;
+  }
+
+  #song_name,#singer{
+    top: -8%;
   }
 }

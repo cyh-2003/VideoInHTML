@@ -390,3 +390,37 @@ dialog div {
 #dialog_time {
     margin-left: 56px;
 }
+
+#div_music_progress {
+    display: none;
+}
+
+.progress {
+
+    input,
+    #music_name {
+        display: none;
+    }
+
+    #div_music_progress {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #div_music_progress>div:first-child {
+        color: black;
+    }
+
+    #div_music_progress>div:last-child {
+        opacity: .6;
+    }
+
+    #div_music_progress>div:last-child:hover {
+        opacity: 1;
+        cursor: pointer;
+    }
+}

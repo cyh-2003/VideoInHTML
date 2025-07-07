@@ -1,5 +1,7 @@
 const main = document.getElementsByClassName('main')[0]
 const channel = new BroadcastChannel('music_channel')
+const xhr = new XMLHttpRequest()
+
 globalThis.music_data
 globalThis.dia_id
 globalThis.music_file_name
@@ -129,6 +131,7 @@ function del(id) {
 function edit(id) {
     dia_id = id
     dia.showModal()
+    submit.style.display = 'block'
     dialog_time.value = music_data[id].time
     dialog_singer.value = music_data[id].singer
     dialog_name.value = music_data[id].name
@@ -139,12 +142,20 @@ function edit(id) {
 }
 
 dialog_file.addEventListener('change', (e) => {
-    file_preview(e, dialog_preview)
+    if (e.target.files[0].type.includes('image')) {
+        file_preview(e, dialog_preview)
+    } else {
+        alert('不是图片')
+    }
 })
 
 //文件上传预览
 file.addEventListener('change', (e) => {
-    file_preview(e, preview)
+    if (e.target.files[0].type.includes('image')) {
+        file_preview(e, preview)
+    } else {
+        alert('不是图片')
+    }
 })
 
 function file_preview(e, tag) {
@@ -160,10 +171,16 @@ function file_preview(e, tag) {
 }
 
 dialog_music.addEventListener('change', (e) => {
-    dialog_music_name.innerText = e.target.files[0].name
+    if (e.target.files[0].type.includes('audio')) {
+        submit.style.display = 'block'
+        dialog_music_name.innerText = e.target.files[0].name
+    } else {
+        alert('不是音频文件')
+    }
 })
 
 submit.addEventListener('click', () => {
+    submit.style.display = 'none'
     music_data[dia_id] = {
         name: dialog_name.value,
         time: dialog_time.value,
@@ -173,15 +190,19 @@ submit.addEventListener('click', () => {
         lrc: dialog_lrc.value
     }
     admin_fetch('/update_song', JSON.stringify(music_data))
-    dia.close()
 })
 
 cancel.addEventListener('click', () => {
     dia.close()
+    cancel_xhr()
 })
 
 music.addEventListener('change', (e) => {
-    music_name.innerText = e.target.files[0].name
+    if (e.target.files[0].type.includes('audio')) {
+        music_name.innerText = e.target.files[0].name
+    } else {
+        alert('不是音频文件')
+    }
 })
 
 //上传歌曲
@@ -191,27 +212,29 @@ upload_form.addEventListener("submit", (e) => {
         formData.delete('music')
         music_file_name = music.files[0].name
         formData.append('musicname', music_file_name)
-        xhr(music.files[0])
+        send_xhr(music.files[0])
         //const chunks = chunkFun(music.files[0])
         //uploadFile(chunks)
     }
     admin_fetch('/add_song', formData)
+    preview.style.display = 'none'
+    music_name.textContent = ''
     upload_form.reset()
-    preview.style.display = "none"
-    music_name.style.display = "none"
 })
 
 //编辑歌曲信息
 dia_form.addEventListener('submit', (e) => {
     const formData = new FormData(e.target)
-    if (dialog_music.length > 0) {
-        if (dialog_music.files[0].size > 5242880) {
-            formData.delete('music')
-            music_file_name = dialog_music.files[0].name
-            xhr(dialog_music.files[0])
-            //const chunks = chunkFun(dialog_music.files[0])
-            //uploadFile(chunks)
-        }
+    if (dialog_music.files[0].size > 5242880) {
+        formData.delete('music')
+        music_file_name = dialog_music.files[0].name
+        dia_music.classList.add('progress')
+        dialog_music_name.textContent = ''
+        send_xhr(dialog_music.files[0])
+        //const chunks = chunkFun(dialog_music.files[0])
+        //uploadFile(chunks)
+    } else {
+        dia.close()
     }
     admin_fetch('/update_song_info', formData)
 })
@@ -304,21 +327,34 @@ function msg(msg, code = () => { }, code2 = () => { }) {
     }, 1500)
 }
 
+xhr.addEventListener('readystatechange', () => {
+    if (xhr.readyState === 4 && xhr.status === 200) {
+        dia.close()
+        div_music.classList.remove('progress')
+    }
+})
+
+xhr.addEventListener('error', () => {
+    msg('上传失败')
+})
+
+xhr.upload.addEventListener('progress', (event) => {
+    document.querySelector('.progress #div_music_progress').firstElementChild.textContent = Math.trunc(event.loaded / event.total * 100) + '%'
+})
+
 // 定义一个函数xhr，接收一个参数params
-function xhr(data) {
+function send_xhr(data) {
+    div_music.classList.add('progress')
     const file = new FormData()
     file.append('music', data)
-    return new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest()
-        xhr.addEventListener('readystatechange', () => {
-            if (xhr.readyState === xhr.DONE) {
-                resolve(xhr.responseText)
-            }
-        })
-        xhr.addEventListener('progress', (event) => {
-            console.log(event.loaded, event.total)
-        })
-        xhr.open('POST', '/upload_large_single_file')
-        xhr.send(file)
-    })
+    xhr.open('POST', '/upload_large_single_file')
+    xhr.send(file)
+}
+
+// 取消xhr上传
+function cancel_xhr() {
+    div_music.classList.remove('progress')
+    dia_music.classList.remove('progress')
+    submit.style.display = 'block'
+    xhr.abort()
 }

@@ -1,21 +1,7 @@
 const channel = new BroadcastChannel('music_channel')
 const img = new Image()
-fetch('/get_songs').then(res => res.json()).then(data => {
-    globalThis.music_resource = data
-    //根据json数据动态插入
-    for (let i in music_resource) {
-        player__main.insertAdjacentHTML('beforeend', `
-        <div class="light id" id="${i}">${i}</div>
-        <div>
-            <div class="change">${music_resource[i].name}</div>
-            <div class="change play_icon" onclick="change(${i})"></div>
-        </div>
-        <div class="light">${music_resource[i].singer}</div>
-        <div class="light">${music_resource[i].time}</div>
-    `)
-    }
-    globalThis.songs_length = document.getElementsByClassName("id").length
-})
+
+network()
 
 const music = new Audio()
 let requestID
@@ -26,13 +12,17 @@ music.volume = .6
 //歌词变量
 let song_lrc_list = []
 let result
-let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?\]/
+let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?]/
 //标签页通信,自动刷新
 channel.addEventListener('message', (event) => {
     player__main.innerHTML = `<div class="light"></div>
                 <div class="light">歌曲</div>
                 <div class="light">歌手</div>
                 <div class="light">时长</div>`
+    network(true)
+})
+
+function network(bool) {
     fetch('/get_songs').then(res => res.json()).then(data => {
         globalThis.music_resource = data
         //根据json数据动态插入
@@ -48,9 +38,9 @@ channel.addEventListener('message', (event) => {
     `)
         }
         globalThis.songs_length = document.getElementsByClassName("id").length
-        change(id)
+        if (bool) change(id)
     })
-})
+}
 
 //页面可见度API,可自行决定是否离开页面自动暂停
 /*
@@ -190,7 +180,7 @@ function change(num) {
     song_lrc.innerHTML = ''
     song_lrc_list = []
     if (music_resource[num].lrc) {
-        song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
+        song_lrc.innerHTML = window.innerHeight > 800 ? '<br><br><br><br><br><br><br>' : '<br><br><br><br><br><br>'
         for (let i = 0; i < result.length; i++) {
             let div_lrc = document.createElement('div')
             if (result[i].match(re_time)) {
@@ -403,10 +393,10 @@ music.addEventListener('timeupdate', () => {
         let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
         if (index == -1) {
             song_lrc.style.transform = 'translateY(-' + song_lrc_list.length * 34 + 'px)'
-            index = song_lrc_list.length + 6
+            index =  song_lrc_list.length + song_lrc.querySelectorAll('br').length - 1
         } else {
             song_lrc.style.transform = 'translateY(-' + (index - 1) * 34 + 'px)'
-            index = index + 6//根据br数量添加
+            index = index + song_lrc.querySelectorAll('br').length - 1
         }
         let on = document.querySelector('.on')
         if (on) on.classList.remove('on')

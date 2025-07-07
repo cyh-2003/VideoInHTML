@@ -26,10 +26,14 @@
                         id="dialog_file"><img id="dialog_preview">
                 </div>
             </div>
-            <div>
-                歌曲<div id="dia_music" class="content" allowdrop><input type="file" accept="audio/*" name="music"
+            <div>歌曲<div id="dia_music" class="content" allowdrop><input type="file" accept="audio/*" name="music"
                         id="dialog_music">
                     <div id="dialog_music_name"></div>
+                    <div id="div_music_progress">
+                        <div></div>
+                        <div>文件正在上传</div>
+                        <div onclick="cancel_xhr()">取消</div>
+                    </div>
                 </div>
             </div>
             <div id="dialog_div_lrc">歌词
@@ -55,8 +59,7 @@
         </div>
 
         <div class="main">
-            <div id="main_admin">
-            </div>
+            <div id="main_admin"></div>
             <div id="main_upload">
                 <form method="post" enctype="multipart/form-data" onsubmit="return false" id="upload_form"
                     style="display: flex;">
@@ -74,10 +77,14 @@
                             <div id="div_img" class="content" allowdrop><input type="file" name="image" accept="image/*"
                                     id="file" required><img id="preview"></div>
                         </div>
-                        <div>
-                            歌曲<div id="div_music" class="content" allowdrop><input type="file" accept="audio/*"
+                        <div>歌曲<div id="div_music" class="content" allowdrop><input type="file" accept="audio/*"
                                     name="music" id="music" required>
                                 <div id="music_name"></div>
+                                <div id="div_music_progress">
+                                    <div></div>
+                                    <div>文件正在上传</div>
+                                    <div onclick="cancel_xhr()">取消</div>
+                                </div>
                             </div>
                         </div>
                         <input type="submit" value="上传">
@@ -87,12 +94,11 @@
                             <textarea name="lrc" id="lrc"></textarea>
                         </div>
                     </div>
-
                 </form>
             </div>
         </div>
     </div>
-    <script text="text/javascript" src="js/admin.js"></script>
+    <script type="text/javascript" src="js/admin.js"></script>
 </body>
 
 </html>
