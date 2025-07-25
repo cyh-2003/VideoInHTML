@@ -126,6 +126,8 @@
             let speed = Number(input.value)
             switch (event.key) {
                 case ' ':
+                case "p":
+                case "P":
                     video.paused === true ? video.play() : video.pause()
                     break;
                 case "ArrowUp":
@@ -147,10 +149,6 @@
                 case "d":
                 case "D":
                     video.volume !== video.duration ? video.currentTime += 5 : undefined
-                    break
-                case "p":
-                case "P":
-                    video.paused === true ? video.play() : video.pause()
                     break
                 case "g":
                 case "G":
@@ -183,8 +181,7 @@
                     document.fullscreenElement === video ? document.exitFullscreen() : video.requestFullscreen()
                     break
             }
-        })
-
+        }, { passive: false })
     </script>
 
 </body>

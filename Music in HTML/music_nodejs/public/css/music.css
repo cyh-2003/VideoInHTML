@@ -8,7 +8,7 @@ body {
   overflow: hidden;
 }
 
-#bg{
+#bg {
   z-index: 1;
   position: absolute;
   width: 100%;
@@ -19,8 +19,8 @@ body {
   filter: blur(65px);
 }
 
-#bg_player_mask{
-  background-color: rgba(0,0,0,.15);
+#bg_player_mask {
+  background-color: rgba(0, 0, 0, .15);
   width: 100%;
   height: 100%;
   z-index: 2;
@@ -68,7 +68,7 @@ svg {
   transform: translateX(-100px);
 }
 
-html{
+html {
   backdrop-filter: blur(70px);
 }
 
@@ -512,7 +512,7 @@ html{
   }
 
   #song_lrc_info {
-    top: 17rem;
+    top: 15rem;
     height: 18rem;
   }
 
@@ -523,7 +523,6 @@ html{
   }
 
   #song_info {
-    top: 3rem;
     width: 375px;
   }
 }
@@ -542,7 +541,8 @@ html{
     top: 1rem;
   }
 
-  #song_name,#singer{
+  #song_name,
+  #singer {
     top: -8%;
   }
 }

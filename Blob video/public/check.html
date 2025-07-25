@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <title>Fragmented MP4</title>
+    <style>
+        :root {
+            --boder:#ccc;
+            --boder-interactive:#00a1d6;
+        }
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .main {
+            margin-top: 10rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .main > div:nth-child(2) {
+            width: 10rem;
+            height: 8rem;
+            border:2px dashed var(--boder);
+            border-radius: .5rem;
+        }
+
+        .main > div:nth-child(2):is(:hover, :active) {
+            border-color: var(--boder-interactive);
+            cursor: pointer;
+        }
+
+        .main > div:nth-child(2).drag-over {
+            border-color: var(--boder-interactive); /* 拖拽悬停时的样式 */
+        }
+
+        input {
+            cursor: pointer;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #result{
+            font-size: 1.5rem;
+        }
+
+        .main > div:nth-last-child(2){
+            margin-top: 5rem;
+        }
+
+        div [over] {
+            border-color: var(--boder-interactive) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div>判断是否为Fragmented MP4</div>
+        <div allowdrop>
+            <input type="file" id="file" accept="video/*">
+        </div>
+        <div id="result"></div>
+        <div>使用FFmpeg生成Fragmented MP4</div>
+        <div>ffmpeg -i video.mp4 -movflags empty_moov+default_base_moof+frag_keyframe video-fragmented.mp4
+        </div>
+    </div>
+    <script>
+        let file = document.getElementById('file')
+        let element = document.getElementById('result')
+
+        //拖拽样式
+        let lastDrop = null
+        document.addEventListener('dragenter',  (ev) => {
+            if (lastDrop) lastDrop.toggleAttribute('over', false)
+            const dropbox = ev.target.closest('[allowdrop]') // 获取最近的放置目标
+            if (dropbox) {
+                dropbox.toggleAttribute('over', true)
+                lastDrop = dropbox
+            }
+        })
+
+        file.onchange = async (e)=> {
+            if (lastDrop) lastDrop.toggleAttribute('over', false)
+            if (!e.target.files[0].type.includes('video')) {
+                alert('不是视频文件')
+                return
+            }
+            if (await check_FragmentedMP4(e.target.files[0])){
+                element.textContent = '\u2714'
+                element.style.color = 'green'
+            } else {
+                element.textContent = '\u2718'
+                element.style.color = 'red'
+            }
+        }
+
+        async function check_FragmentedMP4(file) {
+            const buffer = await file.slice(0, 2048).arrayBuffer()
+            const view = new DataView(buffer)
+
+            for (let i = 0; i < view.byteLength - 8; i++) {
+                const boxSize = view.getUint32(i)
+                const boxType = new TextDecoder().decode(new Uint8Array(buffer, i + 4, 4))
+                if (boxType === 'moof') return true
+                i += boxSize - 1
+            }
+            return false
+        }
+    </script>
+</body>
+</html>

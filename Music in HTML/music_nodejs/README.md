@@ -7,9 +7,12 @@ token设置中只用http,secure为false<br>https,secure为true更安全
 部署服务器记得改端口,根目录新建uploads文件夹
 
 未完成
-1. 文件上传进度
-2. 相似度算法
-3. ~~web component/template(不适用)~~
+1. ~~文件上传进度~~
+2. ~~相似度算法~~
+3. ~~web component/template(写好了才发现有这个好东西,未使用)~~
+
+# 关于reactive.js
+还要操控dom才能使用,如何精确操控未知
 
 # 根据开源协议署名
 - MIT [express](https://github.com/expressjs/express)

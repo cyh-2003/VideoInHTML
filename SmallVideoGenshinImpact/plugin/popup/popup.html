@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <style>
+            :root {
+                --blue-color:#00a1d6;
+                --background:#999;
+            }
+
+            body {
+                font-size: 1.2rem;
+                color: var(--background);
+                display: flex;
+                text-align: center;
+                align-items: center;
+                flex-direction: column;
+                width: 150px;
+            }
+
+            input{
+                outline: 0;
+                height: 1.5rem;
+                background: hsla(0,0%,84.7%,0);
+                width: 100px;
+                transition: border 0.3s ease;
+                border: 1px solid #ccd0d7;
+                border-radius: 5px;
+                margin-bottom: 1rem;
+            }
+
+            input:focus-visible,
+            input:hover,
+            input:focus {
+                border: 1px solid var(--blue-color);
+            }
+        </style>
+    </head>
+    <body>
+    <form>
+        <label>
+            <div>操控时间</div>
+            <input name="time" min="1" value="3" type="number">
+        </label>
+        <label>
+            <div>视频速度</div>
+            <input name="speed" value="1" min="1" max="16" type="number">
+        </label>
+    </form>
+        <script src="popup.js"></script>
+    </body>
+</html>

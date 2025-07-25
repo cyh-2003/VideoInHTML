@@ -3,6 +3,7 @@ const img = new Image()
 
 network()
 
+globalThis.songs_length = null
 const music = new Audio()
 let requestID
 let music_time
@@ -34,10 +35,9 @@ function network(bool) {
             <div class="change play_icon" onclick="change(${i})"></div>
         </div>
         <div class="light">${music_resource[i].singer}</div>
-        <div class="light">${music_resource[i].time}</div>
-    `)
+        <div class="light">${music_resource[i].time}</div>`)
         }
-        globalThis.songs_length = document.getElementsByClassName("id").length
+        songs_length = document.getElementsByClassName("id").length
         if (bool) change(id)
     })
 }
@@ -158,7 +158,7 @@ function song_list_dom(id, bool) {
     }
 }
 //歌曲切换逻辑
-function change(num) {
+window.change = (num) => {
     id = num
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata.title = music_resource[id].name
@@ -209,7 +209,7 @@ function change(num) {
     song_name.innerText = "歌曲名：" + music_resource[num].name
     singer.innerText = "歌手：" + music_resource[num].singer
 
-    img.onload =  ()=> {
+    img.onload = () => {
         const canvas = document.createElement("canvas")
         const ctx = canvas.getContext("2d")
         canvas.width = img.naturalWidth
@@ -217,7 +217,7 @@ function change(num) {
         ctx.drawImage(img, 0, 0)
         const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
         const pixelArray = []
-        for (let i = 0, offset, r, g, b, a; i < canvas.width*canvas.height; i = i + 20) {
+        for (let i = 0, offset, r, g, b, a; i < canvas.width * canvas.height; i = i + 20) {
             offset = i * 4
             r = data[offset]
             g = data[offset + 1]
@@ -231,7 +231,7 @@ function change(num) {
                 }
             }
         }
-        let r=0,g=0,b=0
+        let r = 0, g = 0, b = 0
         for (let i = 0; i < pixelArray.length; i++) {
             r += pixelArray[i][0]
             g += pixelArray[i][1]
@@ -393,13 +393,12 @@ music.addEventListener('timeupdate', () => {
         let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
         if (index == -1) {
             song_lrc.style.transform = 'translateY(-' + song_lrc_list.length * 34 + 'px)'
-            index =  song_lrc_list.length + song_lrc.querySelectorAll('br').length - 1
+            index = song_lrc_list.length + song_lrc.querySelectorAll('br').length - 1
         } else {
             song_lrc.style.transform = 'translateY(-' + (index - 1) * 34 + 'px)'
             index = index + song_lrc.querySelectorAll('br').length - 1
         }
-        let on = document.querySelector('.on')
-        if (on) on.classList.remove('on')
+        document.querySelector('.on')?.classList.remove('on')
         song_lrc.children[index].classList.add('on')
     }
 })

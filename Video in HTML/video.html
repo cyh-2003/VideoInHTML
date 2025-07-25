@@ -15,7 +15,6 @@
             <source src="">
         </video>
         <div class="right">
-
             <div class="speed">
                 <div class="speedTittle">视频速度</div>
                 <div class="speedNumber"><input type="number" class="speedInput" value="1" title="0到16之间" min="0"
@@ -51,6 +50,8 @@
             let speed = Number(input.value)
             switch (event.key) {
                 case ' ':
+                case "p":
+                case "P":
                     video.paused === true ? video.play() : video.pause()
                     break;
                 case "ArrowUp":
@@ -73,10 +74,6 @@
                 case "D":
                     video.volume !== video.duration ? video.currentTime += 5 : undefined
                     break
-                case "p":
-                case "P":
-                    video.paused === true ? video.play() : video.pause()
-                    break
                 case "g":
                 case "G":
                     speed !== 16 ? speed += 1 : 16
@@ -96,7 +93,7 @@
                     document.fullscreenElement === video ? document.exitFullscreen() : video.requestFullscreen()
                     break
             }
-        })
+        }, { passive: false })
     </script>
 </body>
 

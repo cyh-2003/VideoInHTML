@@ -5,14 +5,35 @@
 }
 
 body {
-  height: 100%;
-  background: center center;
-  background-size: cover;
-  backdrop-filter: blur(70px);
   overflow: hidden;
 }
 
+#bg {
+  z-index: 1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: no-repeat center center;
+  background-size: cover;
+  opacity: .6;
+  filter: blur(65px);
+}
+
+#bg_player_mask {
+  background-color: rgba(0, 0, 0, .15);
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  position: absolute;
+}
+
+
+html {
+  backdrop-filter: blur(70px);
+}
+
 #main {
+  z-index: 2;
   margin: 0 7.638889%;
   height: 100vh;
   position: relative;
@@ -183,12 +204,12 @@ body {
   flex: 4;
   display: grid;
   align-items: center;
-  grid-template-columns: 0.5fr 6fr 3fr 1fr;
+  grid-template-columns: 0.5fr 5fr 3fr 1fr;
   grid-auto-rows: 50px;
   color: white;
   opacity: 0.8;
   overflow-y: auto;
-  height: 74vh;
+  height: calc(100vh - 16rem);
 }
 
 #player__main::-webkit-scrollbar {
@@ -272,7 +293,7 @@ body {
 #song_img {
   margin: 0 auto;
   position: absolute;
-  top: 75px;
+  top: 15%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 186px;
@@ -303,7 +324,7 @@ body {
   margin-top: 200px;
 }
 
-#songer {
+#singer {
   position: absolute;
   top: 1%;
   left: 50%;
@@ -326,7 +347,6 @@ body {
   position: absolute;
   top: 4px;
   height: 15px;
-  opacity: 0;
 }
 
 #voice_click {
@@ -335,6 +355,7 @@ body {
   top: 10px;
   width: 80px;
   height: 15px;
+  opacity: 0;
 }
 
 .light {
@@ -355,7 +376,7 @@ body {
   position: absolute;
   width: 100%;
   top: 320px;
-  height: 35vh;
+  height: calc(100vh - 38rem);
   -webkit-mask-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 0, hsla(0, 0%, 100%, .6) 15%, #fff 25%, #fff 75%, hsla(0, 0%, 100%, .6) 85%, hsla(0, 0%, 100%, 0));
 }
 
@@ -410,7 +431,8 @@ body {
   }
 
   #player__main,
-  #player_music_info {
+  #player_music_info,
+  .side {
     display: none;
   }
 
@@ -446,10 +468,11 @@ body {
 
   #player_ft {
     width: 8rem;
+    bottom: -0.8rem;
   }
 
   #song_lrc_info {
-    top: 14rem;
+    top: 15rem;
     height: 18rem;
   }
 
@@ -462,19 +485,24 @@ body {
   #song_info {
     width: 375px;
   }
+}
 
-  @media screen and (max-height: 780px) {
-    #player_ft {
-      bottom: 1rem;
-    }
+@media screen and (max-height: 780px) {
+  #player_ft {
+    bottom: 1rem;
+  }
 
-    #song_lrc_info {
-      top: 15.5rem;
-      height: 17rem;
-    }
+  #song_lrc_info {
+    top: 14rem;
+    height: 13rem;
+  }
 
-    #song_info {
-      top: 1rem;
-    }
+  #song_info {
+    top: 1rem;
+  }
+
+  #song_name,
+  #singer {
+    top: -8%;
   }
 }

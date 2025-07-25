@@ -1,6 +1,7 @@
-import music_data from './data.json' with { type: 'json' }
-const music = document.querySelector("audio")
-const music_resource = music_data
+import music_resource from './data.json' with { type: 'json' }
+
+const img = new Image()
+const music = new Audio()
 let requestID
 let music_time
 let id = 1
@@ -9,9 +10,8 @@ music.volume = .6
 //歌词变量
 let song_lrc_list = []
 let result
-let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?\]/
+let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?]/
 
-//根据data.js数据动态插入
 for (let i in music_resource) {
     player__main.insertAdjacentHTML('beforeend', `
         <div class="light id" id="${i}">${i}</div>
@@ -25,13 +25,23 @@ for (let i in music_resource) {
 }
 const songs_length = document.getElementsByClassName("id").length
 
+//页面可见度API,可自行决定是否离开页面自动暂停
+/*
+window.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === "hidden") {
+        cancelAnimationFrame(requestID)
+        music.pause()
+    }else {
+        music.play()
+    }
+})
+*/
+
 //格式化时间
-// 定义一个函数，用于格式化时间
 function formatTime(seconds) {
     let min = Math.floor(seconds / 60)
     let sec = Math.floor(seconds % 60)
     return (min < 10 ? '0' + min : min) + ':' + (sec < 10 ? '0' + sec : sec)
-
 }
 //按钮播放
 btn_play.addEventListener("click", () => {
@@ -131,29 +141,29 @@ function song_list_dom(id, bool) {
     }
 }
 //歌曲切换逻辑
-window.change = function(num) {
+window.change = (num)=> {
     id = num
     if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata.title = music_resource[id].name
         navigator.mediaSession.metadata.artist = music_resource[id].singer
-        navigator.mediaSession.metadata.artwork = [{
-            src: "./images/album/" + music_resource[id].album,
-            sizes: '300x300',
-            type: 'image/webp'
-        },]
+        navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + music_resource[id].album, sizes: '300x300', type: 'image/webp' },]
     }
+
+    img.src = "./images/album/" + music_resource[num].album
+
+
     //歌词逻辑
     //歌词解析
+    //decodeURIComponent(escape(atob(music_resource[1].lrc)))
     result = new TextDecoder().decode(
         Uint8Array.from(atob(music_resource[num].lrc), c => c.charCodeAt(0))
     ).split('\n')
-    //decodeURIComponent(escape(atob(music_resource[1].lrc)))
 
     //歌词显示(dom)
     song_lrc.innerHTML = ''
     song_lrc_list = []
     if (music_resource[num].lrc) {
-        song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
+        song_lrc.innerHTML = window.innerHeight > 800 ? '<br><br><br><br><br><br><br>' : '<br><br><br><br><br><br>'
         for (let i = 0; i < result.length; i++) {
             let div_lrc = document.createElement('div')
             if (result[i].match(re_time)) {
@@ -174,14 +184,47 @@ window.change = function(num) {
     song_list_dom(num, true)
     music.src = "./music/" + music_resource[num].path
     player_music_info.innerText = music_resource[num].name
+    music.play()
     btn_play.className = "pause"
+    update()
     song_img.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
-    document.body.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
+    bg.style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
     song_name.innerText = "歌曲名：" + music_resource[num].name
     singer.innerText = "歌手：" + music_resource[num].singer
 
-    update()
-    music.play()
+    img.onload =  ()=> {
+        const canvas = document.createElement("canvas")
+        const ctx = canvas.getContext("2d")
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        ctx.drawImage(img, 0, 0)
+        const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data
+        const pixelArray = []
+        for (let i = 0, offset, r, g, b, a; i < canvas.width*canvas.height; i = i + 20) {
+            offset = i * 4
+            r = data[offset]
+            g = data[offset + 1]
+            b = data[offset + 2]
+            a = data[offset + 3]
+
+            // 只提取非透明且不是白色的像素数据
+            if (typeof a === "undefined" || a >= 125) {
+                if (!(r > 250 && g > 250 && b > 250)) {
+                    pixelArray.push([r, g, b])
+                }
+            }
+        }
+        let r=0,g=0,b=0
+        for (let i = 0; i < pixelArray.length; i++) {
+            r += pixelArray[i][0]
+            g += pixelArray[i][1]
+            b += pixelArray[i][2]
+        }
+        r = Math.trunc(r / pixelArray.length)
+        g = Math.trunc(g / pixelArray.length)
+        b = Math.trunc(b / pixelArray.length)
+        document.body.style = `background:rgb(${r},${g},${b})`
+    }
 }
 //确保获得音乐的时长
 music.addEventListener('loadedmetadata', () => {
@@ -197,7 +240,6 @@ voice_click.addEventListener("click", (event) => {
         voice_logo.classList.remove("no_vocie")
     }
 })
-
 //实现快捷键
 document.addEventListener('keydown', (event) => {
     let music_volume = Math.floor(music.volume * 100)
@@ -334,13 +376,13 @@ music.addEventListener('timeupdate', () => {
         let index = song_lrc_list.findIndex((e) => e.time > music.currentTime)
         if (index == -1) {
             song_lrc.style.transform = 'translateY(-' + song_lrc_list.length * 34 + 'px)'
-            index = song_lrc_list.length + 6
+            index =  song_lrc_list.length + song_lrc.querySelectorAll('br').length - 1
         } else {
             song_lrc.style.transform = 'translateY(-' + (index - 1) * 34 + 'px)'
-            index = index + 6//根据br数量添加
+            index = index + song_lrc.querySelectorAll('br').length - 1
         }
-        let on = document.querySelector('.on')
-        if (on) on.classList.remove('on')
+        document.querySelector('.on')?.classList.remove('on')
         song_lrc.children[index].classList.add('on')
     }
 })
+

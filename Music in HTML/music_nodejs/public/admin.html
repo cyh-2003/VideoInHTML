@@ -18,9 +18,6 @@
             <div>歌手名
                 <input type="text" name="singer" id="dialog_singer" maxlength="50">
             </div>
-            <div>时长
-                <input type="text" name="time" id="dialog_time" maxlength="10">
-            </div>
             <div>专辑封面
                 <div id="dia_img" class="content" allowdrop><input type="file" name="image" accept="image/*"
                         id="dialog_file"><img id="dialog_preview">
@@ -29,8 +26,8 @@
             <div>歌曲<div id="dia_music" class="content" allowdrop><input type="file" accept="audio/*" name="music"
                         id="dialog_music">
                     <div id="dialog_music_name"></div>
-                    <div id="div_music_progress">
-                        <div></div>
+                    <div class="div_music_progress">
+                        <div>0%</div>
                         <div>文件正在上传</div>
                         <div onclick="cancel_xhr()">取消</div>
                     </div>
@@ -70,9 +67,6 @@
                         <div>歌手名
                             <input type="text" name="singer" id="singer" required maxlength="50">
                         </div>
-                        <div>时长
-                            <input type="text" required name="time" id="time" maxlength="10">
-                        </div>
                         <div>专辑封面
                             <div id="div_img" class="content" allowdrop><input type="file" name="image" accept="image/*"
                                     id="file" required><img id="preview"></div>
@@ -80,8 +74,8 @@
                         <div>歌曲<div id="div_music" class="content" allowdrop><input type="file" accept="audio/*"
                                     name="music" id="music" required>
                                 <div id="music_name"></div>
-                                <div id="div_music_progress">
-                                    <div></div>
+                                <div class="div_music_progress">
+                                    <div>0%</div>
                                     <div>文件正在上传</div>
                                     <div onclick="cancel_xhr()">取消</div>
                                 </div>

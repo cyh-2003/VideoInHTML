@@ -11,59 +11,58 @@
 </head>
 
 <body>
-    <audio></audio>
-    <div id="main">
-        <div id="player__bd">
-            <!-- 列表 -->
-            <div id="player__main">
-                <div class="light"></div>
-                <div class="light">歌曲</div>
-                <div class="light">歌手</div>
-                <div class="light">时长</div>
-            </div>
-            <div id="song_info">
-                <div id="song_img"></div>
-                <div id="song_name"></div>
-                <div id="singer"></div>
-                <div id="song_lrc_info">
-                    <div id="song_lrc">
-                        <!-- 歌词位置 -->
-                    </div>
-                    <div id="no_lrc">此歌曲为没有填词的纯音乐，请您欣赏</div>
-                </div>
-            </div>
+<div id="bg"></div>
+<div id="bg_player_mask"></div>
+<div id="main">
+    <div id="player__bd">
+        <!-- 列表 -->
+        <div id="player__main">
+            <div class="light"></div>
+            <div class="light">歌曲</div>
+            <div class="light">歌手</div>
+            <div class="light">时长</div>
         </div>
-        <!-- 下部分 -->
-        <div id="player_ft">
-            <div id="btn_prev"></div>
-            <div id="btn_play"></div>
-            <div id="btn_next"></div>
-            <div id="player_ft_main">
-                <div id="player_music_info">&nbsp;</div>
-                <div id="player_progress">
-                    <div id="player_progress_inner"></div>
-                    <div id="player_progress_played">
-                        <div id="player_progress_dot"></div>
-                    </div>
-                    <div id="player_progress_click"></div>
+        <div id="song_info">
+            <div id="song_img"></div>
+            <div id="song_name"></div>
+            <div id="singer"></div>
+            <div id="song_lrc_info">
+                <div id="song_lrc">
+                    <!-- 歌词位置 -->
                 </div>
-                <div id="player_music_time">&nbsp;</div>
-            </div>
-            <div id="btn_loop"></div>
-            <!-- 音量 -->
-            <div id="player_voice">
-                <div id="voice_logo"></div>
-                <div id="voice_inner"></div>
-                <div id="voice_overed">
-                    <div id="voice_dot"></div>
-                </div>
-                <div id="voice_click"></div>
+                <div id="no_lrc">此歌曲为没有填词的纯音乐，请您欣赏</div>
             </div>
         </div>
     </div>
-    <img src="./images/album/bg1.webp" id="aa">
-    <div id="aaa" style="width: 500px;height: 500px;z-index: 1;position: absolute"> </div>
-    <script type="module" src="./js/music.js"></script>
+    <!-- 下部分 -->
+    <div id="player_ft">
+        <div id="btn_prev"></div>
+        <div id="btn_play"></div>
+        <div id="btn_next"></div>
+        <div id="player_ft_main">
+            <div id="player_music_info">&nbsp;</div>
+            <div id="player_progress">
+                <div id="player_progress_inner"></div>
+                <div id="player_progress_played">
+                    <div id="player_progress_dot"></div>
+                </div>
+                <div id="player_progress_click"> </div>
+            </div>
+            <div id="player_music_time">&nbsp;</div>
+        </div>
+        <div id="btn_loop"></div>
+        <!-- 音量 -->
+        <div id="player_voice">
+            <div id="voice_logo"></div>
+            <div id="voice_inner"></div>
+            <div id="voice_overed">
+                <div id="voice_dot"></div>
+            </div>
+            <div id="voice_click"></div>
+        </div>
+    </div>
+</div>
+<script type="module" src="js/music.js"></script>
 </body>
 
 </html>
