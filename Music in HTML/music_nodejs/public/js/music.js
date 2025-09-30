@@ -1,19 +1,21 @@
 const channel = new BroadcastChannel('music_channel')
 const img = new Image()
 
+if ('documentPictureInPicture' in window) {
+    btn_loop.insertAdjacentHTML('afterend', '<svg t="1756964835349" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" p-id="2700" width="128" height="128"><path d="M833.066667 99.114667H128.64A92.074667 92.074667 0 0 0 36.650667 191.104v559.957333a92.074667 92.074667 0 0 0 91.989333 92.16h328.96a30.165333 30.165333 0 1 0 0-60.288h-328.96a30.122667 30.122667 0 0 1-30.122667-30.122666V191.104a30.122667 30.122667 0 0 1 30.122667-30.122667h704.426667a30.122667 30.122667 0 0 1 30.122666 30.122667v272.384a30.122667 30.122667 0 0 0 30.122667 30.122667 31.189333 31.189333 0 0 0 30.122667-30.122667V191.104a89.6 89.6 0 0 0-90.368-91.989333z" fill="#ffffff" p-id="2701"></path><path d="M927.36 610.389333h-336.64a48.213333 48.213333 0 0 0-48.085333 48.085334v216.448a48.213333 48.213333 0 0 0 48.085333 48.085333h336.64a48.213333 48.213333 0 0 0 48.085333-48.085333v-216.405334a47.488 47.488 0 0 0-48.085333-48.128z" fill="#ffffff" p-id="2702"></path></svg>')
+}
+
 network()
 
 globalThis.songs_length = null
 const music = new Audio()
-let requestID
-let music_time
+let requestID, music_time, lrc_too_high, result
 let id = 1
 let music_Volume = .6
 music.volume = .6
 //歌词变量
 let song_lrc_list = []
-let result
-let re_time = /\[\d{2}:\d{2}(?:\.\d{2})?]/
+const re_time = /\[\d{2}:\d{2}(?:\.\d{2})?]/
 //标签页通信,自动刷新
 channel.addEventListener('message', (event) => {
     player__main.innerHTML = `<div class="light"></div>
@@ -72,9 +74,15 @@ function play() {
         update()
         song_list_dom(id, true)
         btn_play.className = "pause"
+        if (documentPictureInPicture.window) {
+            pip_window_doc.getElementById('pip_play').className = 'pause'
+        }
     }
     else {
         btn_play.classList.remove("pause")
+        if (documentPictureInPicture.window) {
+            pip_window_doc.getElementById('pip_play').classList.remove('pause')
+        }
         music.pause()
         cancelAnimationFrame(requestID)
         song_list_dom(id, false)
@@ -107,14 +115,14 @@ player_progress_click.addEventListener("click", (event) => {
 //音量图标点击逻辑
 voice_logo.addEventListener("click", () => {
     if (voice_logo.className == "") {
-        voice_logo.className = "no_vocie"
+        voice_logo.className = "no_voice"
         voice_logo_Fn(0, 0, 0)
         if (music.volume != 0) music_Volume = music.volume
     } else {
-        voice_logo.classList.remove("no_vocie")
+        voice_logo.classList.remove("no_voice")
         let voice_volume_restart = (music_Volume * 100) * (voice_inner.clientWidth / 100)
         voice_logo_Fn(music_Volume, voice_volume_restart, voice_volume_restart)
-        if (music.volume == 0) { voice_logo.className = "no_vocie" }
+        if (music.volume == 0) { voice_logo.className = "no_voice" }
     }
 })
 //音量条dom
@@ -166,8 +174,14 @@ window.change = (num) => {
         navigator.mediaSession.metadata.artwork = [{ src: "./images/album/" + music_resource[id].album, sizes: '300x300', type: 'image/webp' },]
     }
 
-    img.src = "./images/album/" + music_resource[num].album
+    if (documentPictureInPicture.window) {
+        pip_window_doc.getElementById('pip_img').src = "./images/album/" + music_resource[num].album
+        pip_window_doc.getElementById('pip_bg').style.backgroundImage = "url(./images/album/" + music_resource[num].album + ")"
+        pip_window_doc.getElementById('pip_song_name').textContent = music_resource[num].name
+        pip_window_doc.getElementById('pip_singer').textContent = music_resource[num].singer
+    }
 
+    img.src = "./images/album/" + music_resource[num].album
 
     //歌词逻辑
     //歌词解析
@@ -179,8 +193,8 @@ window.change = (num) => {
     //歌词显示(dom)
     song_lrc.innerHTML = ''
     song_lrc_list = []
+    lrc_too_high = 0
     if (music_resource[num].lrc) {
-        song_lrc.innerHTML = window.innerHeight > 800 ? '<br><br><br><br><br><br><br>' : '<br><br><br><br><br><br>'
         for (let i = 0; i < result.length; i++) {
             let div_lrc = document.createElement('div')
             if (result[i].match(re_time)) {
@@ -191,9 +205,18 @@ window.change = (num) => {
                 if (text) {
                     song_lrc_list.push({ time: totalSeconds, text: text })
                     div_lrc.textContent = text
+                    div_lrc.onclick = () => {
+                        music.currentTime = totalSeconds
+                    }
                     song_lrc.appendChild(div_lrc)
+                    if (div_lrc.clientHeight / 34 !== 1) {
+                        lrc_too_high += div_lrc.clientHeight / 34
+                    }
                 }
             }
+        }
+        if (lrc_too_high > 0) {
+            song_lrc.insertAdjacentHTML('afterbegin', '<br>'.repeat(9 - lrc_too_high))
         }
     } else {
         song_lrc.innerHTML = '<br><br><br><br><br><br><br>'
@@ -241,6 +264,9 @@ window.change = (num) => {
         g = Math.trunc(g / pixelArray.length)
         b = Math.trunc(b / pixelArray.length)
         document.body.style = `background:rgb(${r},${g},${b})`
+        if (documentPictureInPicture.window) {
+            pip_window_doc.body.style = `background:rgb(${r},${g},${b})`
+        }
     }
 }
 //确保获得音乐的时长
@@ -254,7 +280,7 @@ voice_click.addEventListener("click", (event) => {
     music.volume = event.offsetX / voice_inner.clientWidth
     if (music.volume > 0) {
         music_Volume = music.volume
-        voice_logo.classList.remove("no_vocie")
+        voice_logo.classList.remove("no_voice")
     }
 })
 //实现快捷键
@@ -290,7 +316,7 @@ document.addEventListener('keydown', (event) => {
             let width_left = Math.floor(music_volume_up * (voice_inner.clientWidth / 100))
             if (music_volume_up <= 100) {
                 voice_logo_Fn(music_volume_up * .01, width_left, width_left)
-                voice_logo.classList.remove("no_vocie")
+                voice_logo.classList.remove("no_voice")
                 music_Volume = music.volume
             }
             break
@@ -303,7 +329,7 @@ document.addEventListener('keydown', (event) => {
                 voice_logo_Fn(music_volume_down * .01, width_right, width_right)
                 music_Volume = music.volume
             }
-            if (music.volume == 0) voice_logo.className = "no_vocie"
+            if (music.volume == 0) voice_logo.className = "no_voice"
             break
     }
 })
@@ -351,8 +377,7 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
     let initX = event.clientX
     let startX = overed.offsetWidth
     document.onmousemove = (event) => {
-        let moveX = event.clientX
-        let newX = moveX - initX + startX
+        let newX = event.clientX - initX + startX
         if (0 <= newX && newX <= inner.offsetWidth) {
             dot.style.left = newX + "px"
             overed.style.width = newX + "px"
@@ -362,9 +387,9 @@ function dot_move(event, dot, inner, overed, bool) {//bool为true时调整播放
             } else {
                 music.volume = newX / inner.clientWidth
                 if (music.volume == 0) {
-                    voice_logo.className = "no_vocie"
+                    voice_logo.className = "no_voice"
                 } else {
-                    voice_logo.classList.remove("no_vocie")
+                    voice_logo.classList.remove("no_voice")
                 }
             }
         }
@@ -405,4 +430,131 @@ music.addEventListener('timeupdate', () => {
 
 document.querySelector('a').addEventListener('click', () => {
     window.open('/login', 'login')
+})
+
+// PictureInPicture API
+let pip_window
+document.querySelector('svg').addEventListener('click', async () => {
+    if (documentPictureInPicture.window) {
+        pip_window.close()
+        return
+    }
+    pip_window = await window.documentPictureInPicture.requestWindow({
+        width: 350,
+        height: 350
+    })
+    globalThis.pip_window_doc = pip_window.document
+    pip_window_doc.head.innerHTML = `
+    <style>
+  *{
+  margin: 0;
+  padding: 0;
+  }
+  
+  #pip_bg{
+  filter: blur(35px);
+  opacity: .6;
+  background: no-repeat center center;
+  background-size: cover;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  }
+  
+  #pip_info{
+  display: flex;
+  align-items: center;
+  width: 100vw;
+  height: 80vh;
+  position: relative;
+  flex-direction: column;
+  color: white;
+  font-size: 1em;
+  justify-content: space-evenly;
+  }
+  
+  img{
+  width: 50vw;
+  }
+  
+  #pip_song_name{
+  top: 5px;
+  }
+  
+  #pip_singer{
+  top: 5px;
+  }
+  
+  .pip_controller{
+  position: relative;
+  z-index: 1;
+  display: flex;
+  height: 20vh;
+  width: 100vw;
+ justify-content: space-around;
+        align-items: center;
+      #pip_prev{
+      opacity: .6;
+            background-image: url("../images/music.png");
+            background-position: 0 -30px;
+            width: 19px;
+            height: 20px;
+        }
+        
+        #pip_play{
+        opacity: .6;
+            background-image: url("../images/music.png");
+            width: 21px;
+            height: 29px;
+        }
+        
+        #pip_next{
+        opacity: .6;
+            background-image: url("../images/music.png");
+            width: 19px;
+            height: 20px;
+            background-position: 0 -52px;
+        }
+  }
+  
+  .pause {
+    background-position: -30px 0;
+  }
+  
+  .pip_controller > div:hover {
+  cursor: pointer;
+  opacity: 1 !important;
+  }
+  
+  #pip_mask{
+  background-color:rgba(0,0,0,.25);
+  z-index: -1;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  }
+</style>`
+    pip_window_doc.body.style.background = document.body.style.background
+    pip_window_doc.body.innerHTML = `
+            <div id="pip_bg" style="background-image: url(${img.src})"></div>
+            <div id="pip_mask"></div>
+            <div id="pip_info">
+                <img id="pip_img" src="${img.src}">
+                <div id="pip_song_name">${song_name.textContent.slice(4)}</div>
+                <div id="pip_singer">${singer.textContent.slice(3)}</div>
+            </div>
+            <div class="pip_controller">
+            <div id="pip_prev"></div>
+            <div id="pip_play"></div>
+            <div id="pip_next"></div></div>`
+    if (!music.paused) pip_window_doc.getElementById('pip_play').className = 'pause'
+    pip_window_doc.getElementById('pip_prev').onclick = () => {
+        prev_song()
+    }
+    pip_window_doc.getElementById('pip_play').onclick = () => {
+        play()
+    }
+    pip_window_doc.getElementById('pip_next').onclick = () => {
+        next_song()
+    }
 })

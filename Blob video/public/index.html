@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,7 @@
             box-sizing: border-box;
         }
 
-        body{
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -35,42 +36,43 @@
         }
     </style>
 </head>
+
 <body>
-<div class="video">
-    <video crossorigin="anonymous" preload="auto" controls="controls"></video>
-</div>
+    <div class="video">
+        <video crossorigin="anonymous" preload="auto" controls="controls"></video>
+    </div>
     <button>判断是否为Fragmented MP4</button>
     <script>
         const video = document.querySelector('video')
         fetch('/video').then(res => res.blob()).then(data => video.src = URL.createObjectURL(data))
 
         document.querySelector('button').onclick = () => {
-            window.open('/check.html','check')
+            window.open('/check.html', 'check')
         }
 
-   /*   const xhr = new XMLHttpRequest()
-        xhr.open("get", '/video')
-        xhr.responseType = "blob"
-        xhr.onload = () => {
-            video.src = URL.createObjectURL(xhr.response)
-        }
-        xhr.send()
-
-        const mediaSource = new MediaSource()
-        video.src = URL.createObjectURL(mediaSource)
-        mediaSource.addEventListener('sourceopen', () => {
-            const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
-            fetch('/video').then(res => res.arrayBuffer()).then(data => sourceBuffer.appendBuffer(data))
-            sourceBuffer.addEventListener('updateend', () => {
-                    mediaSource.endOfStream()
-            })
-        })
-        mediaSource.addEventListener('sourceended', () => {
-            console.log('MediaSource已结束')
-        })
-        mediaSource.addEventListener('sourceclose', () => {
-            console.log('MediaSource已关闭')
-        })*/
+        /*   const xhr = new XMLHttpRequest()
+             xhr.open("get", '/video')
+             xhr.responseType = "blob"
+             xhr.onload = () => {
+                 video.src = URL.createObjectURL(xhr.response)
+             }
+             xhr.send()
+     
+             const mediaSource = new MediaSource()
+             video.src = URL.createObjectURL(mediaSource)
+             mediaSource.addEventListener('sourceopen', () => {
+                 const sourceBuffer = mediaSource.addSourceBuffer('video/mp4; codecs="avc1.42E01E, mp4a.40.2"');
+                 fetch('/video').then(res => res.arrayBuffer()).then(data => sourceBuffer.appendBuffer(data))
+                 sourceBuffer.addEventListener('updateend', () => {
+                         mediaSource.endOfStream()
+                 })
+             })
+             mediaSource.addEventListener('sourceended', () => {
+                 console.log('MediaSource已结束')
+             })
+             mediaSource.addEventListener('sourceclose', () => {
+                 console.log('MediaSource已关闭')
+             })*/
 
         //避免video因获得focus-visible而无法按空格无法暂停
         video.addEventListener('focus', () => {
@@ -82,7 +84,7 @@
                 case ' ':
                 case "p":
                 case "P":
-                    video.paused === true ? video.play() : video.pause()
+                    video.paused ? video.play() : video.pause()
                     break;
                 case "ArrowUp":
                 case "w":
@@ -109,7 +111,8 @@
                     document.fullscreenElement === video ? document.exitFullscreen() : video.requestFullscreen()
                     break
             }
-        },{ passive: false })
+        }, { passive: false })
     </script>
 </body>
+
 </html>

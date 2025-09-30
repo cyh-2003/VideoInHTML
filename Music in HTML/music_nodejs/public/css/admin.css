@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+:root{
+    --blue:#00a1d6;
+}
+
 body {
     overflow: hidden;
 }
@@ -30,7 +34,7 @@ body {
     height: 100%;
 }
 
-.side.collapsed {
+.side .collapsed {
     width: 50px;
 }
 
@@ -62,7 +66,7 @@ body {
 .side li::before {
     content: "•";
     margin-right: 10px;
-    color: #3498db;
+    color: var(--blue);
 }
 
 .side.collapsed li span {
@@ -108,9 +112,8 @@ li span {
 
 #dia {
     overflow-x: hidden;
-    position: absolute;
-    left: 20%;
-    top: 10%;
+    position: fixed;
+    margin: auto;
     width: 1000px;
     height: 800px;
     border-radius: 5px;
@@ -139,34 +142,13 @@ textarea,
     padding: 0 5px 0 5px;
 }
 
-.content[over],
-#dia_music:active,
-#dia_music:hover,
-#dialog_name:active,
-#dialog_name:focus,
-#dialog_name:hover,
-#dialog_singer:active,
-#dialog_singer:focus,
-#dialog_singer:hover,
-#dialog_time:active,
-#dialog_time:focus,
-#dialog_time:hover,
-textarea:active,
-textarea:focus,
-textarea:hover,
-#time:hover,
-#time:active,
-#time:focus,
-#singer:hover,
-#singer:active,
-#singer:focus,
-#name:hover,
-#name:active,
-#name:focus {
-    border-color: #00a1d6 !important;
-    outline: none !important;
-}
 
+.content[over],
+:is(#dia_music, #dialog_name, #dialog_singer, #dialog_time,textarea,#time, #singer, #name):is(:active, :focus, :hover)
+{
+    border-color: var(--blue);
+    outline: none;
+}
 
 .main label {
     margin-right: 50px;
@@ -192,7 +174,7 @@ textarea:hover,
     height: 45px;
     line-height: 40px;
     color: #fff;
-    background: #00a1d6;
+    background: var(--blue);
     border: 0;
     border-radius: 5px;
     cursor: pointer;
@@ -229,11 +211,8 @@ textarea,
     justify-content: center;
 }
 
-#dia_img:hover,
-#lrc:hover,
-#div_img:hover,
-#div_music:hover {
-    border-color: #00a1d6;
+:is(#dia_img,#lrc,#dia_img,#div_music):hover{
+    border-color: var(--blue);
 }
 
 #dialog_preview,

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取色器</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #edf4ff;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+      padding: 20px 0;
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 2.2rem;
+    }
+
+    .color-picker {
+      width: 100%;
+      max-width: 400px;
+      height: 180px;
+      border-radius: 12px;
+      background: white;
+      margin: 0 auto 30px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    #btn {
+      padding: 12px 24px;
+      background: #4a6cf7;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    #btn:hover {
+      background: #3a5be0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    #color {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      border: 2px solid #f0f0f0;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .result {
+      width: 100%;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      margin-top: 30px;
+
+      button {
+        width: 100px;
+        padding: 10px 24px;
+        background: #4a6cf7;
+        color: white;
+        border: none;
+        border-radius: 0 6px 6px 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+    }
+
+    .color-format {
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease;
+
+      div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-top: 15px;
+      }
+    }
+
+    .color-format:hover {
+      transform: translateY(-5px);
+    }
+
+    .color-format h3 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+      font-size: 1.2rem;
+    }
+
+    .color-format input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #e2e8f0;
+      border-right: 0;
+      border-radius: 6px 0 0 6px;
+      text-align: center;
+      font-size: 0.9rem;
+      background: #f8fafc;
+      color: #334155;
+    }
+
+    @media (max-width: 768px) {
+      .result {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .result {
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      .color-picker {
+        height: 160px;
+      }
+    }
+
+    .message {
+      position: fixed;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      opacity: 0;
+      transition: top 0.4s ease, opacity 0.4s ease;
+      display: flex;
+      align-items: center;
+      max-width: 90%;
+      width: auto;
+    }
+
+    .message-icon {
+      margin-right: 15px;
+      font-size: 24px;
+    }
+
+    .message.show {
+      top: 20px;
+      opacity: 1;
+    }
+
+    .message.hide {
+      top: -100px;
+      opacity: 0;
+    }
+
+    .message.success {
+      border-left: 5px solid #2ecc71;
+    }
+
+    .message.error {
+      border-left: 5px solid #e74c3c;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h1>取色器</h1>
+
+    <div class="color-picker">
+      <button id="btn">选择颜色</button>
+      <div id="color"></div>
+    </div>
+
+    <div class="result">
+      <div class="color-format">
+        <h3>HEX</h3>
+        <div>
+          <input type="text" id="hex-input" disabled>
+          <button onclick="copy('hex')">复制</button>
+        </div>
+      </div>
+      <div class="color-format">
+        <h3>RGB</h3>
+        <div>
+          <input type="text" id="rgb-input" disabled>
+          <button onclick="copy('rgb')">复制</button>
+        </div>
+      </div>
+      <div class="color-format">
+        <h3>HSL</h3>
+        <div>
+          <input type="text" id="hsl-input" disabled>
+          <button onclick="copy('hsl')">复制</button>
+        </div>
+      </div>
+      <div class="color-format">
+        <h3>HSV</h3>
+        <div>
+          <input type="text" id="hsv-input" disabled>
+          <button onclick="copy('hsv')">复制</button>
+        </div>
+      </div>
+      <div class="color-format">
+        <h3>CMYK</h3>
+        <div>
+          <input type="text" id="cmyk-input" disabled>
+          <button onclick="copy('cmyk')">复制</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="message">
+    <div class="message-icon">✓</div>
+    <div class="message-content">
+      <h3>标题</h3>
+      <p>这是一条消息内容</p>
+    </div>
+  </div>
+  <script>
+    if (!('EyeDropper' in window)) {
+      alert('当前浏览器不支持 EyeDropper API')
+      window.close()
+    }
+
+    const dropper = new EyeDropper()
+    const btn = document.getElementById('btn')
+    const colorDiv = document.getElementById('color')
+    const hexInput = document.getElementById('hex-input')
+    const rgbInput = document.getElementById('rgb-input')
+    const hslInput = document.getElementById('hsl-input')
+    const hsvInput = document.getElementById('hsv-input')
+    const cmykInput = document.getElementById('cmyk-input')
+
+    const message = document.querySelector('.message')
+    const messageIcon = message.querySelector('.message-icon')
+    const messageTitle = message.querySelector('h3')
+    const messageContent = message.querySelector('p')
+
+    btn.addEventListener('click', async () => {
+      try {
+        const result = await dropper.open()
+        const hex = result.sRGBHex
+        colorDiv.style.backgroundColor = hex
+        const rgb = hexToRgb(hex)
+        const hsl = rgbToHsl(rgb)
+        const hsv = rgbToHsv(rgb)
+        const cmyk = rgbToCmyk(rgb)
+
+        hexInput.value = hex
+        rgbInput.value = `${rgb.r},${rgb.g},${rgb.b}`
+        hslInput.value = `hsl(${hsl.h},${hsl.s}%,${hsl.l}%)`
+        hsvInput.value = `hsv(${hsv.h},${hsv.s}%,${hsv.v}%)`
+        cmykInput.value = `cmyk(${cmyk.c}%,${cmyk.m}%,${cmyk.y}%,${cmyk.k}%)`
+
+      } catch (error) {
+        showMessage('error', '取消选色颜色')
+      }
+    })
+
+    function hexToRgb(hex) {
+      hex = hex.replace(/^#/, '')
+
+      if (hex.length === 3) {
+        hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2]
+      }
+
+      const r = parseInt(hex.substring(0, 2), 16)
+      const g = parseInt(hex.substring(2, 4), 16)
+      const b = parseInt(hex.substring(4, 6), 16)
+
+      return { r, g, b }
+    }
+
+    function rgbToHsl(rgb) {
+      let { r, g, b } = rgb
+      r /= 255
+      g /= 255
+      b /= 255
+
+      const max = Math.max(r, g, b)
+      const min = Math.min(r, g, b)
+      let h, s, l = (max + min) / 2
+
+      if (max === min) {
+        h = s = 0
+      } else {
+        const d = max - min
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min)
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0)
+            break
+          case g:
+            h = (b - r) / d + 2
+            break
+          case b:
+            h = (r - g) / d + 4
+            break
+        }
+        h /= 6
+      }
+
+      return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        l: Math.round(l * 100),
+      }
+    }
+
+    function rgbToHsv(rgb) {
+      let { r, g, b } = rgb
+      r /= 255
+      g /= 255
+      b /= 255
+
+      const max = Math.max(r, g, b)
+      const min = Math.min(r, g, b)
+      const d = max - min
+      let h, s, v = max
+
+      s = max === 0 ? 0 : d / max
+
+      if (max === min) {
+        h = 0
+      } else {
+        switch (max) {
+          case r:
+            h = (g - b) / d + (g < b ? 6 : 0)
+            break
+          case g:
+            h = (b - r) / d + 2
+            break
+          case b:
+            h = (r - g) / d + 4
+            break
+        }
+        h /= 6
+      }
+
+      return {
+        h: Math.round(h * 360),
+        s: Math.round(s * 100),
+        v: Math.round(v * 100),
+      }
+    }
+
+    function rgbToCmyk(rgb) {
+      let { r, g, b } = rgb
+      r /= 255
+      g /= 255
+      b /= 255
+
+      const k = 1 - Math.max(r, g, b)
+      const c = k === 1 ? 0 : (1 - r - k) / (1 - k)
+      const m = k === 1 ? 0 : (1 - g - k) / (1 - k)
+      const y = k === 1 ? 0 : (1 - b - k) / (1 - k)
+
+      return {
+        c: Math.round(c * 100),
+        m: Math.round(m * 100),
+        y: Math.round(y * 100),
+        k: Math.round(k * 100),
+      }
+    }
+
+    async function copy(type) {
+      if (hexInput.value === '') {
+        alert('请先取色')
+        return
+      }
+      const { state } = await navigator.permissions.query({
+        name: "clipboard-write",
+      })
+      if (state == 'granted') {
+        let str
+        switch (type) {
+          case 'hex':
+            str = hexInput.value
+            break
+          case 'rgb':
+            str = rgbInput.value
+            break
+          case 'hsl':
+            str = hslInput.value
+            break
+          case 'hsv':
+            str = hsvInput.value
+            break
+          case 'cmyk':
+            str = cmykInput.value
+            break
+        }
+        await navigator.clipboard.writeText(str)
+        showMessage('success', `已复制${type.toUpperCase()}值：${str}`)
+      }
+    }
+
+    function showMessage(type, content) {
+      messageContent.textContent = content
+      switch (type) {
+        case 'success':
+          message.className = 'message success'
+          messageIcon.textContent = '✓'
+          messageTitle.textContent = '复制成功'
+          break;
+        case 'error':
+          message.className = 'message error'
+          messageIcon.textContent = '✗'
+          messageTitle.textContent = '复制失败'
+          break
+      }
+
+      message.classList.add('show')
+
+      setTimeout(() => {
+        message.classList.remove('show')
+        message.classList.add('hide')
+
+        setTimeout(() => {
+          message.classList.remove('hide')
+        }, 400)
+      }, 3000)
+    }
+  </script>
+</body>
+
+</html>

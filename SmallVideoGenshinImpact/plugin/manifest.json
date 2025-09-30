@@ -19,7 +19,8 @@
             ],
             "js": ["content-scripts/content.js"],
             "permissions": ["activeTab","tabs"],
-            "run_at": "document_end"
+            "run_at": "document_start",
+            "all_frames": true
         }
     ],
     "web_accessible_resources": [

@@ -1,3 +1,4 @@
+import SHA256 from "./SHA256.js"
 const main = document.getElementsByClassName('main')[0]
 const channel = new BroadcastChannel('music_channel')
 const xhr = new XMLHttpRequest()
@@ -7,6 +8,8 @@ globalThis.format_time = null
 globalThis.music_data = null
 globalThis.dia_id = null
 globalThis.music_file_name = null
+globalThis.music_path_name = null
+globalThis.album_path_name = null
 
 fetch('/get_songs').then(res => res.json()).then(data => {
     music_data = data
@@ -68,16 +71,23 @@ admin.addEventListener('click', function () {
 })
 
 //拖拽样式
-var lastDrop = null
-document.addEventListener('dragenter', function (ev) {
-    if (lastDrop) {
-        lastDrop.toggleAttribute('over', false)
-    }
-    const dropbox = ev.target.closest('[allowdrop]') // 获取最近的放置目标
-    if (dropbox) {
-        dropbox.toggleAttribute('over', true)
-        lastDrop = dropbox
-    }
+// var lastDrop = null
+// document.addEventListener('dragenter',  (ev) => {
+//     if (lastDrop) lastDrop.toggleAttribute('over', false)
+//     const dropbox = ev.target.closest('[allowdrop]') // 获取最近的放置目标
+//     if (dropbox) {
+//         dropbox.toggleAttribute('over', true)
+//         lastDrop = dropbox
+//     }
+// })
+document.querySelectorAll('div[allowdrop]').forEach((element) => {
+    element.addEventListener('dragover', (e) => {
+        e.currentTarget.setAttribute('over', 'true')
+    })
+
+    element.addEventListener('dragleave', (e) => {
+        e.currentTarget.removeAttribute('over')
+    })
 })
 
 //侧边栏切换上传
@@ -92,12 +102,11 @@ upload.addEventListener('click', function () {
 })
 
 //上移
-function up(id) {
+globalThis.up=(id)=>{
     let temp = music_data[id]
     if (id == 1) {
         music_data[1] = music_data[Object.keys(music_data).filter(key => !isNaN(key)).length]
         music_data[Object.keys(music_data).filter(key => !isNaN(key)).length] = temp
-        console.log(music_data)
     } else {
         music_data[id] = music_data[id - 1]
         music_data[id - 1] = temp
@@ -106,7 +115,7 @@ function up(id) {
 }
 
 //下移
-function down(id) {
+globalThis.down = (id)=>{
     let temp = music_data[id]
     if (id == Object.keys(music_data).filter(key => !isNaN(key)).length) {
         music_data[Object.keys(music_data).filter(key => !isNaN(key)).length] = music_data[1]
@@ -119,7 +128,7 @@ function down(id) {
 }
 
 //删除
-function del(id, bool = true) {
+globalThis.del= (id, bool = true)=>{
     delete music_data[id]
     let temp = Object.values(music_data)
     music_data = {}
@@ -130,7 +139,7 @@ function del(id, bool = true) {
 }
 
 //编辑
-function edit(id) {
+globalThis.edit = (id)=> {
     dia_id = id
     dia.showModal()
     submit.style.visibility = 'visible'
@@ -217,19 +226,25 @@ function formatTime(file) {
 }
 
 //上传歌曲
-upload_form.addEventListener("submit", (e) => {
+upload_form.addEventListener("submit", async (e) => {
     const formData = new FormData(e.target)
     formData.append('time', format_time)
+    formData.delete('image')
+    album_path_name = `${random_string()}.${file.files[0].name.split('.').pop()}`
+    formData.append('image', new File([file.files[0]], album_path_name, { type: file.files[0].type }))
+    music_path_name = `${random_string()}.${music.files[0].name.split('.').pop()}`
+    const music_file = new File([music.files[0]], music_path_name, { type: music.files[0].type })
+    formData.delete('music')
     let bool = true
     if (music.files[0].size > 5242880) {
-        formData.delete('music')
-        music_file_name = music.files[0].name
-        formData.append('musicname', music_file_name)
-        send_xhr(music.files[0])
+        send_xhr(music_file)
         bool = false
         //const chunks = chunkFun(music.files[0])
         //uploadFile(chunks)
+    } else {
+        formData.append('music', music_file)
     }
+    formData.append('musicname', music_path_name)
     admin_fetch('/add_song', formData, bool)
     preview.style.display = 'none'
     music_name.textContent = ''
@@ -237,39 +252,41 @@ upload_form.addEventListener("submit", (e) => {
 })
 
 //编辑歌曲信息
-dia_form.addEventListener('submit', (e) => {
+dia_form.addEventListener('submit', async (e) => {
     const formData = new FormData(e.target)
     let bool = true
+    submit.style.visibility = 'hidden'
+   if (dialog_file.files[0]){
+       formData.delete('image')
+       album_path_name = `${random_string()}.${dialog_file.files[0].name.split('.').pop()}`
+       formData.append('image',new File([dialog_file.files[0]],album_path_name, { type: dialog_file.files[0].type }))
+   }
     if (dialog_music.files[0]) {
+        formData.delete('music')
         formData.append('time', format_time)
+        music_path_name = `${random_string()}.${dialog_music.files[0].name.split('.').pop()}`
+        formData.append('music', music)
+        const music_file = new File([dialog_music.files[0]], music_path_name, { type: dialog_music.files[0].type })
         if (dialog_music.files[0].size > 5242880) {
-            formData.delete('music')
-            music_file_name = dialog_music.files[0].name
             dia_music.classList.add('progress')
             dialog_music_name.textContent = ''
-            send_xhr(dialog_music.files[0])
+            send_xhr(music_file)
             bool = false
-            //const chunks = chunkFun(dialog_music.files[0])
+            //const chunks = chunkFun(music_file)
             //uploadFile(chunks)
         } else {
-            dia.close()
+            formData.append('music', music_file)
         }
-    } else {
-        dia.close()
     }
-    admin_fetch('/update_song_info', formData, bool, false)
-})
-
-submit.addEventListener('click', () => {
-    submit.style.visibility = 'hidden'
     music_data[dia_id] = {
         name: dialog_name.value,
-        path: dialog_music_name.innerText,
-        time: format_time,
-        album: dialog_file.files[0]?.name ?? music_data[dia_id].album,
+        path: dialog_music.files[0] ? music_path_name : music_data[dia_id].path,
+        time: dialog_music.files[0] ? format_time : music_data[dia_id].time,
+        album: dialog_file.files[0] ? album_path_name : music_data[dia_id].album,
         singer: dialog_singer.value,
         lrc: dialog_lrc.value
     }
+    admin_fetch('/update_song_info', formData, bool, false)
     admin_fetch('/update_song', JSON.stringify(music_data))
 })
 
@@ -283,10 +300,11 @@ login_out.addEventListener('click', () => {
 /**
  * 发送请求
  * @param {string} url
- * @param {*} data
+ * @param {FormData} data
  * @param {boolean} bool 用于控制msg函数调用
+ * @param {boolean} bool2 用于控制channel.postMessage调用
  */
-function admin_fetch(url, data, bool = true) {
+function admin_fetch(url, data, bool = true,bool2 = true) {
     let config = {
         method: 'POST',
         body: data
@@ -297,12 +315,10 @@ function admin_fetch(url, data, bool = true) {
         }
     }
     fetch(url, config).then(res => res.json()).then(data => {
-            if (bool) {
-                msg(data.data.msg, () => { }, main_admin_new)
-            }
+            if (bool) msg(data.data.msg, () => { }, main_admin_new)
             fetch('/get_songs').then(res => res.json()).then(data => {
                 music_data = data
-                debounce(() => { channel.postMessage('new_music_data') })()
+                if (bool2) channel.postMessage('new_music_data')
             })
         }
 
@@ -368,6 +384,7 @@ xhr.addEventListener('readystatechange', () => {
     if (xhr.readyState === 4 && xhr.status === 200) {
         dia.close()
         div_music.classList.remove('progress')
+        dia_music.classList.remove('progress')
         msg(JSON.parse(xhr.responseText).data.msg)
     }
 })
@@ -390,7 +407,7 @@ function send_xhr(data) {
 }
 
 // 取消xhr上传
-function cancel_xhr() {
+globalThis.cancel_xhr = ()=>{
     xhr.abort()
     div_music.classList.remove('progress')
     dia_music.classList.remove('progress')
@@ -398,13 +415,6 @@ function cancel_xhr() {
     del(Object.keys(music_data).length - 1, false)
 }
 
-// 防抖函数
-function debounce(fn, delay = 10) {
-    let timer
-    return function () {
-        clearTimeout(timer)
-        timer = setTimeout(() => {
-            fn.apply(this, arguments)
-        }, delay)
-    }
+function random_string(){
+    return  Date.now().toString(36) + Math.random().toString(36).slice(2)
 }

@@ -12,6 +12,8 @@ const secret = "shubaobao"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+if (!fs.existsSync('/uploads')) fs.mkdirSync('/uploads')
+
 //login使用变量
 let user = {}
 
@@ -170,7 +172,7 @@ app.post("/add_song",check_jwt, upload.fields([
         [new_id]: {
             name: req.body.name,
             time: req.body.time,
-            path: req.body.musicname ? req.body.musicname : req.files['music'][0].originalname,
+            path: req.body.musicname,
             album: req.files['image'][0].originalname,
             singer: req.body.singer,
             lrc: req.body.lrc,

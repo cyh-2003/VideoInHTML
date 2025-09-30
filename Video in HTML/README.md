@@ -22,6 +22,5 @@ videos 额外快捷键
 | Q    | 上一集 |
 | E    | 下一集 |
 
-> left 前面相同的部分
-> right 后面相同的部分(包括后缀名)
-> path 具体名称
+# 关于DASH
+[前哔哩哔哩程序员](https://www.bilibili.com/opus/147500554315665146)

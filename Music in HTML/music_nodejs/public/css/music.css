@@ -4,6 +4,10 @@
   user-select: none;
 }
 
+:root{
+  --on : #31c27c;
+}
+
 body {
   overflow: hidden;
 }
@@ -25,11 +29,6 @@ body {
   height: 100%;
   z-index: 2;
   position: absolute;
-}
-
-svg {
-  width: 50%;
-  height: 50%;
 }
 
 .side {
@@ -250,28 +249,15 @@ html {
   opacity: 0.8;
   overflow-y: auto;
   height: calc(100vh - 16rem);
+  scrollbar-width: none;
 }
 
-#player__main::-webkit-scrollbar {
-  display: none;
-}
-
-.play_icon:hover,
-#voice_logo:hover,
-#btn_prev:hover,
-#btn_next:hover,
-#btn_loop:hover,
-#btn_play:hover,
-#voice_dot:hover,
-#player_progress_dot:hover {
+:is(.play_icon,#voice_logo,#btn_next,#btn_prev,#btn_loop,#btn_play,#voice_dot,svg,#player_progress_dot):hover{
   opacity: 1;
   cursor: pointer;
 }
 
-#player_progress_dot:hover,
-#voice_dot:hover,
-#player_progress_click:hover,
-#voice_click:hover {
+:is(#player_progress_click,#voice_click):hover{
   cursor: pointer;
 }
 
@@ -279,7 +265,7 @@ html {
   background-position: -30px 0;
 }
 
-.no_vocie {
+.no_voice {
   background-position: 0 -182px !important;
 }
 
@@ -409,7 +395,7 @@ html {
 }
 
 .on {
-  color: #31c27c;
+  color: var(--on);
 }
 
 #song_lrc_info {
@@ -417,11 +403,24 @@ html {
   width: 100%;
   top: 320px;
   height: calc(100vh - 38rem);
-  -webkit-mask-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 0, hsla(0, 0%, 100%, .6) 15%, #fff 25%, #fff 75%, hsla(0, 0%, 100%, .6) 85%, hsla(0, 0%, 100%, 0));
+  mask-image: linear-gradient(180deg, hsla(0, 0%, 100%, 0) 0, hsla(0, 0%, 100%, .6) 15%, #fff 25%, #fff 75%, hsla(0, 0%, 100%, .6) 85%, hsla(0, 0%, 100%, 0));
+}
+
+#song_lrc > div:hover{
+  opacity: .7;
 }
 
 #no_lrc {
-  color: #31c27c;
+  color: var(--on);
+}
+
+svg {
+  opacity: .6;
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  left: 87%;
+  top: 0;
 }
 
 /* 兼容窗口缩小 */
@@ -433,6 +432,10 @@ html {
   #player_voice {
     left: 85%;
   }
+
+  svg{
+    left: 98%;
+  }
 }
 
 @media screen and (max-width: 1200px) {
@@ -443,6 +446,10 @@ html {
   #player_voice {
     left: 90%;
   }
+
+  svg{
+    left: 104%;
+  }
 }
 
 @media screen and (min-width: 510px) and (max-width: 990px) {
@@ -451,9 +458,8 @@ html {
     display: none;
   }
 
-  #player_voice {
-    opacity: 0;
-    left: 999%;
+  #player_voice,svg {
+    visibility: hidden;
   }
 }
 
@@ -472,7 +478,8 @@ html {
 
   #player__main,
   #player_music_info,
-  .side {
+  .side,
+  svg{
     display: none;
   }
 
